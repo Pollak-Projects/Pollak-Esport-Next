@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-
+import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
   title: "Pollák ESport",
@@ -14,10 +14,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="hu">
-      <body
-        className="antialiased"
-      >
+      <body className="antialiased dark">
         {children}
+        <Toaster />
       </body>
     </html>
   );
