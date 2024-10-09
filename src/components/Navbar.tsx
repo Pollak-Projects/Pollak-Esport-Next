@@ -1,11 +1,14 @@
+"use client";
+
 import Link from "next/link";
 import React from "react";
 import { Button } from "./ui/button";
+import { usePathname } from "next/navigation";
 
-const Navbar = ({ active }: { active: string }) => {
+const Navbar = () => {
   const Links = [
     {
-      title: "Home",
+      title: "Kezdőlap",
       link: "/",
     },
     {
@@ -17,15 +20,15 @@ const Navbar = ({ active }: { active: string }) => {
       link: "/groups",
     },
   ];
-  console.log();
+  const pathname = usePathname();
   return (
-    <header className="w-full bg-slate-900 flex justify-between items-center px-20 h-[80px]">
+    <header className="w-full border-b-[1px] border-b-border flex justify-between items-center px-20 h-[80px]">
       <div className="flex gap-10 items-center">
         <div className="text-3xl">Pollák Esport</div>
         <nav>
           <ul className="flex gap-4 text-2xl items-center">
             {Links.map((link) => {
-              if (link.link == active) {
+              if (link.link === pathname) {
                 return (
                   <li key={link.title}>
                     <Link

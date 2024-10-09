@@ -1,5 +1,14 @@
-import Navbar from "@/components/Navbar";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
 const page = () => {
@@ -40,10 +49,36 @@ const page = () => {
 
   return (
     <>
-      <Navbar active="/games"></Navbar>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 p-4 mx-32">
-        {games.map((game) => {
-          return <div className="w-full h-[200px] " key={game.title}></div>;
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 p-4 mx-auto max-w-[1700px] ">
+        {games.map((game, i) => {
+          return (
+            <Link key={game.title} href={`/games/${i}`}>
+              <Card className="shadow-md shadow-white/10 hover:scale-105 transition-all ease-in-out hover:shadow-2xl hover:shadow-white/20">
+                <div className="relative w-full h-[200px]">
+                  <Image
+                    src={game.image}
+                    alt={game.title}
+                    fill
+                    className="object-cover object-bottom rounded-se-lg rounded-ss-lg"
+                  />
+                </div>
+                <CardHeader>
+                  <CardTitle>{game.title}</CardTitle>
+                  <CardDescription>{game.sub}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p>{game.description}</p>
+                </CardContent>
+                <CardFooter className="flex justify-between items-center">
+                  <p>2024.09.01 - 2024.09.10</p>
+                  <div className="italic">
+                    További információk{" "}
+                    <span className=" font-black">{"⭢"}</span>
+                  </div>
+                </CardFooter>
+              </Card>
+            </Link>
+          );
         })}
       </div>
     </>
