@@ -49,7 +49,7 @@ const page = () => {
 
   return (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 p-4 mx-auto max-w-[1700px] ">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 p-4 mx-auto max-w-[1500px] ">
         {games.map((game, i) => {
           return (
             <Link key={game.title} href={`/games/${i}`}>

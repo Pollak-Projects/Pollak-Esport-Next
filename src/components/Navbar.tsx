@@ -22,7 +22,7 @@ const Navbar = () => {
   ];
   const pathname = usePathname();
   return (
-    <header className="w-full border-b-[1px] border-b-border flex justify-between items-center px-20 h-[80px]">
+    <header className="w-full border-b-[1px] border-b-border flex justify-between items-center px-20 h-[80px] absolute top-0">
       <div className="flex gap-10 items-center">
         <div className="text-3xl">Pollák Esport</div>
         <nav>
@@ -33,7 +33,7 @@ const Navbar = () => {
                   <li key={link.title}>
                     <Link
                       href={link.link}
-                      className="text-muted transition-all"
+                      className="text-white/50 transition-all"
                     >
                       {link.title}
                     </Link>
