@@ -32,7 +32,11 @@ export function NewTeam() {
         <CardContent>
           <form>
             <div className="grid w-full items-center gap-4">
-              <InputOTP maxLength={6} pattern={REGEXP_ONLY_DIGITS_AND_CHARS}>
+              <InputOTP
+                required
+                maxLength={6}
+                pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
+              >
                 <InputOTPGroup>
                   <InputOTPSlot index={0} />
                   <InputOTPSlot index={1} />
@@ -43,10 +47,10 @@ export function NewTeam() {
                 </InputOTPGroup>
               </InputOTP>
               <div className="items-top flex space-x-2">
-                <Checkbox id="terms1" />
+                <Checkbox required id="terms" />
                 <div className="grid gap-1.5 leading-none">
                   <label
-                    htmlFor="terms1"
+                    htmlFor="terms"
                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                   >
                     Elfogadom az ÁSZF-et.
@@ -62,6 +66,7 @@ export function NewTeam() {
         <CardFooter className="flex justify-between">
           <Button variant="outline">Mégse</Button>
           <Button
+            type="submit"
             onClick={() =>
               toast("Sikeresen csatlakoztál a csapathoz!", {
                 description: new Date().toLocaleTimeString([], {

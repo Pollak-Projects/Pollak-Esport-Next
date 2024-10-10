@@ -61,6 +61,7 @@ export function NewTeam() {
         <CardFooter className="flex justify-between">
           <Button variant="outline">Mégse</Button>
           <Button
+            type="submit"
             onClick={() =>
               toast("Csapat sikeresen létrehozva", {
                 description: new Date().toLocaleTimeString([], {
