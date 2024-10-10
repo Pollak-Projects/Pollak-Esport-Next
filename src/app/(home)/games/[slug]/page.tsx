@@ -78,7 +78,7 @@ const page = ({ params }: { params: { slug: string } }) => {
     },
   ];
   return (
-    <div className="w-full h-full flex justify-center gap-20 py-[100px]  flex-col px-32">
+    <div className="w-full h-full flex  gap-20 pt-[50px]  flex-col px-32">
       <div className="border-b-[1px] border-b-white/20 w-full text-3xl pb-5">
         Ranbow Six Seige - 1v1 - 2024.11.1
       </div>
