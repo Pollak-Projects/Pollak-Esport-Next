@@ -9,7 +9,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-
+import img from "../../../tempimg/r6 card (1v1).png";
 const page = () => {
   const games = [
     {
@@ -17,7 +17,7 @@ const page = () => {
       description:
         "Azonnali kieséses rendszerben, 3 körig tartó meccs. A játékosok a meccs előtt egyeztetnek a mapról és a karakterekről.",
       image:
-        "https://i.ytimg.com/vi/drxNwPIosUM/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLCZ9Bt_b9O7-PBI5yVFM3C-tfvSFQ",
+        img,
       sub: "subtitle",
     },
     {
@@ -58,7 +58,7 @@ const page = () => {
                     src={game.image}
                     alt={game.title}
                     fill
-                    className="object-cover object-bottom rounded-se-lg rounded-ss-lg"
+                    className="object-cover object-bottom rounded-se-lg rounded-ss-lg object-center"
                   />
                 </div>
                 <CardHeader>

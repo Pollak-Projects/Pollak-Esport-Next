@@ -5,8 +5,12 @@ import React from "react";
 import { Button } from "./ui/button";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
+
+import logo from "../tempimg/logo2.png";
 
 const Navbar = () => {
+
   const Links = [
     {
       title: "Kezdőlap",
@@ -30,7 +34,13 @@ const Navbar = () => {
       )}
     >
       <div className="flex gap-10 items-center">
-        <div className="text-3xl">Pollák Esport</div>
+        <div className="text-3xl hidden">Pollák Esport</div>
+        <Image
+        alt="logo"
+        src={logo}
+        width={75}
+        height={75}
+        />
         <nav>
           <ul className="flex gap-4 text-2xl items-center">
             {Links.map((link) => {
