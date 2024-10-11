@@ -1,15 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "./ui/button";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { Skeleton } from "./ui/skeleton";
 
 import logo from "../tempimg/logo2.png";
 
 const Navbar = () => {
+  const [isLoading, setIsLoading] = useState(true);
+
   const Links = [
     {
       title: "Kezdőlap",
@@ -24,7 +27,15 @@ const Navbar = () => {
       link: "/groups",
     },
   ];
+
   const pathname = usePathname();
+
+  useEffect(() => {
+    const img = document.createElement("img");
+    img.src = logo.src;
+    img.onload = () => setIsLoading(false);
+  }, []);
+
   return (
     <header
       className={cn(
@@ -39,7 +50,11 @@ const Navbar = () => {
             <div className="w-full h-0.5 bg-white"></div>
             <div className="w-full h-0.5 bg-white"></div>
           </div>
-          <Image alt="logo" src={logo} width={70} height={70} priority />
+          {isLoading ? (
+            <Skeleton className="w-[70px] h-[70px] rounded-full" />
+          ) : (
+            <Image alt="logo" src={logo} width={70} height={70} priority />
+          )}
         </div>
 
         <nav>
