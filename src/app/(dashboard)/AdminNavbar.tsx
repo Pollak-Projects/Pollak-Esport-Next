@@ -17,7 +17,7 @@ const AdminNavbar = () => {
     },
     {
       title: "Csapat létrehozása",
-      link: "/admin/newteam",
+      link: "/newteam",
     },
   ];
   const pathname = usePathname();
