@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -53,8 +52,8 @@ const page = () => {
         {games.map((game, i) => {
           return (
             <Link key={game.title} href={`/games/${i}`}>
-              <Card className="shadow-md shadow-white/10 hover:scale-105 transition-all ease-in-out hover:shadow-2xl hover:shadow-white/20">
-                <div className="relative w-full h-[200px]">
+              <Card className="shadow-md shadow-white/10 hover:scale-105 transition-all ease-in-out hover:shadow-2xl hover:shadow-white/20 border-b-purple-900 border-b-4 bg-slate-950">
+                <div className="relative w-full h-[150px]">
                   <Image
                     src={game.image}
                     alt={game.title}

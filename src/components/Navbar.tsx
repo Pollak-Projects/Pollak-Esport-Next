@@ -4,6 +4,7 @@ import Link from "next/link";
 import React from "react";
 import { Button } from "./ui/button";
 import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 const Navbar = () => {
   const Links = [
@@ -22,7 +23,12 @@ const Navbar = () => {
   ];
   const pathname = usePathname();
   return (
-    <header className="w-full border-b-[1px] border-b-border flex justify-between items-center px-20 h-[80px] absolute top-0">
+    <header
+      className={cn(
+        "w-full border-b-[1px] border-b-border flex justify-between items-center px-20 h-[80px] absolute top-0",
+        { "border-0": pathname === "/" }
+      )}
+    >
       <div className="flex gap-10 items-center">
         <div className="text-3xl">Pollák Esport</div>
         <nav>
