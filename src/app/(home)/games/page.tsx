@@ -16,8 +16,7 @@ const page = () => {
       title: "R6 1v1",
       description:
         "Azonnali kieséses rendszerben, 3 körig tartó meccs. A játékosok a meccs előtt egyeztetnek a mapról és a karakterekről.",
-      image:
-        img,
+      image: img,
       sub: "subtitle",
     },
     {
@@ -52,13 +51,13 @@ const page = () => {
         {games.map((game, i) => {
           return (
             <Link key={game.title} href={`/games/${i}`}>
-              <Card className="shadow-md shadow-white/10 hover:scale-105 transition-all ease-in-out hover:shadow-2xl hover:shadow-white/20 border-b-purple-900 border-b-4 bg-black/20">
+              <Card className="shadow-md shadow-purple-900 hover:scale-105 transition-all ease-in-out hover:shadow-2xl hover:shadow-purple-900 border-b-purple-900 border-b-4 bg-black/20">
                 <div className="relative w-full h-[150px]">
                   <Image
                     src={game.image}
                     alt={game.title}
                     fill
-                    className="object-cover object-bottom rounded-se-lg rounded-ss-lg object-center"
+                    className="object-cover rounded-se-lg rounded-ss-lg object-center"
                   />
                 </div>
                 <CardHeader>

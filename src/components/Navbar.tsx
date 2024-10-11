@@ -10,7 +10,6 @@ import Image from "next/image";
 import logo from "../tempimg/logo2.png";
 
 const Navbar = () => {
-
   const Links = [
     {
       title: "Kezdőlap",
@@ -29,20 +28,22 @@ const Navbar = () => {
   return (
     <header
       className={cn(
-        "w-full border-b-[1px] border-b-border flex justify-between items-center px-20 h-[80px] absolute top-0",
-        { "border-0": pathname === "/" }
+        "w-full border-b-[1px] border-b-border flex justify-between items-center md:px-20 max-md:pl-10 h-[80px] absolute top-0 ",
+        { "border-0 pt-10": pathname === "/" }
       )}
     >
-      <div className="flex gap-10 items-center">
-        <div className="text-3xl hidden">Pollák Esport</div>
-        <Image
-        alt="logo"
-        src={logo}
-        width={75}
-        height={75}
-        />
+      <div className="flex gap-10 items-center max-md:w-full">
+        <div className="max-md:flex max-md:w-full max-md:justify-between max-md:items-center max-md:flex-row-reverse">
+          <div className="md:hidden flex flex-col justify-between w-[50px] h-[30px]">
+            <div className="w-full h-0.5 bg-white"></div>
+            <div className="w-full h-0.5 bg-white"></div>
+            <div className="w-full h-0.5 bg-white"></div>
+          </div>
+          <Image alt="logo" src={logo} width={70} height={70} priority />
+        </div>
+
         <nav>
-          <ul className="flex gap-4 text-2xl items-center">
+          <ul className="flex gap-4 text-2xl items-center max-md:hidden">
             {Links.map((link) => {
               if (link.link === pathname) {
                 return (
@@ -65,7 +66,7 @@ const Navbar = () => {
           </ul>
         </nav>
       </div>
-      <div className="">
+      <div className="max-md:hidden">
         <Button>Bejelentkezés</Button>
       </div>
     </header>
