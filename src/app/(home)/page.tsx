@@ -2,9 +2,9 @@ import Info from "@/components/Info";
 
 export default function Home() {
   return (
-    <div className="w-full bg-gradient-to-t via-purple-900/30 from-purple-950/60 via-10% pt-10  to-70% to-background h-full">
+    <div className="w-full bg-gradient-to-t via-purple-900/30 from-purple-950/60 via-10% pt-10  to-70% to-background min-h-screen ">
       <Info />
-      <div className="w-full bottom-10 px-10 absolute flex justify-between flex-wrap items-end gap-5">
+      <div className="w-full bottom-10 px-10 absolute flex justify-between flex-wrap items-end gap-5 max-md:relative max-md:mt-20">
         <div className="text-[7rem] max-md:text-7xl leading-none  font-black">
           Pollák <br /> Esport
         </div>

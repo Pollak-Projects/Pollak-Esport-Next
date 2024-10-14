@@ -85,7 +85,7 @@ const page = () => {
             ))
           : games.map((game, i) => (
               <Link key={game.title} href={`/games/${i}`}>
-                <Card className="shadow-md shadow-purple-900 hover:scale-105 transition-all ease-in-out hover:shadow-2xl hover:shadow-purple-900 border-b-purple-900 border-b-4 bg-black/20">
+                <Card className="shadow-md shadow-purple-900 hover:scale-105 transition-all ease-in-out hover:shadow-2xl hover:shadow-purple-900 border-b-purple-900 border-b-4 bg-black/20 peer peer-hover:hidden">
                   <div className="relative w-full h-[150px]">
                     <Image
                       src={game.image}
