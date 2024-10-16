@@ -12,9 +12,11 @@ import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import img from "../../../tempimg/r6 card (1v1).png";
 import { Skeleton } from "@/components/ui/skeleton";
+import { cn } from "@/lib/utils";
 
 const page = () => {
   const [loading, setLoading] = useState(true);
+  const [hoveredCardId, setHoveredCardId] = useState<number>();
   const games = [
     {
       title: "R6 1v1",
@@ -85,7 +87,18 @@ const page = () => {
             ))
           : games.map((game, i) => (
               <Link key={game.title} href={`/games/${i}`}>
-                <Card className="shadow-md shadow-purple-900 hover:scale-105 transition-all ease-in-out hover:shadow-2xl hover:shadow-purple-900 border-b-purple-900 border-b-4 bg-black/20 peer peer-hover:hidden">
+                <Card
+                  className={cn(
+                    "shadow-md shadow-purple-900 border-[0px] hover:scale-105 duration-300 transition-all ease-in-out hover:shadow-2xl hover:shadow-purple-900 border-b-purple-900 border-b-4 bg-black/[0] backdrop-blur-xl ",
+                    {
+                      "opacity-10":
+                        hoveredCardId != i && hoveredCardId != undefined,
+                    }
+                  )}
+                  onMouseEnter={() => setHoveredCardId(i)}
+                  onMouseLeave={() => setHoveredCardId(undefined)}
+                >
+                  <div className=""></div>
                   <div className="relative w-full h-[150px]">
                     <Image
                       src={game.image}

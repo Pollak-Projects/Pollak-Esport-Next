@@ -2,13 +2,12 @@
 
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
-import { Button } from "./ui/button";
+import { Button } from "../../../components/ui/button";
 import { usePathname } from "next/navigation";
-import { cn } from "@/lib/utils";
 import Image from "next/image";
-import { Skeleton } from "./ui/skeleton";
+import { Skeleton } from "../../../components/ui/skeleton";
 
-import logo from "../tempimg/logo2.png";
+import logo from "@/tempimg/logo2.png";
 
 const Navbar = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -24,7 +23,7 @@ const Navbar = () => {
     },
     {
       title: "Csapatok",
-      link: "/groups",
+      link: "/teams",
     },
   ];
 
@@ -37,12 +36,7 @@ const Navbar = () => {
   }, []);
 
   return (
-    <header
-      className={cn(
-        "w-full border-b-[1px] border-b-border flex justify-between items-center md:px-20 max-md:pl-10 h-[80px] absolute top-0 ",
-        { "border-0 pt-10": pathname === "/" }
-      )}
-    >
+    <header className="w-full pt-10 flex justify-between items-center md:px-20 max-md:pl-10 h-[80px] absolute top-0 ">
       <div className="flex gap-10 items-center max-md:w-full">
         <div className="max-md:flex max-md:w-full max-md:justify-between max-md:items-center max-md:flex-row-reverse">
           <div className="md:hidden flex flex-col justify-between w-[50px] h-[30px]">
