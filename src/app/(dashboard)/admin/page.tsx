@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/chart";
 import { Monitor, Phone } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import { Skeleton } from "@/components/ui/skeleton"; // Assuming you have a Skeleton component
 
 const chartData = [
   { month: "Január", desktop: 186, mobile: 80 },
@@ -49,61 +50,130 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 const page = () => {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate data loading
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <>
       <div className="flex flex-wrap gap-10 p-10">
-        <Card className="w-80">
+        <Card className="w-80 bg-slate-800">
           <CardHeader>
             <CardTitle className="text-center">
               Regisztrált felhasználók
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-6xl text-center">365</p>
+            {loading ? (
+              <Skeleton className="h-16 w-full bg-slate-700" />
+            ) : (
+              <p className="text-6xl text-center">365</p>
+            )}
           </CardContent>
         </Card>
-        <Card className="w-80">
+        <Card className="w-80 bg-slate-800">
           <CardHeader>
             <CardTitle className="text-center">Regisztrált csapatok</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-6xl text-center">23</p>
+            {loading ? (
+              <Skeleton className="h-16 w-full bg-slate-700" />
+            ) : (
+              <p className="text-6xl text-center">23</p>
+            )}
           </CardContent>
         </Card>
-        <Card className="w-80">
+        <Card className="w-80 bg-slate-800">
           <CardHeader>
             <CardTitle className="text-center">Lejátszott meccsek</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-6xl text-center">28</p>
+            {loading ? (
+              <Skeleton className="h-16 w-full bg-slate-700" />
+            ) : (
+              <p className="text-6xl text-center">28</p>
+            )}
+          </CardContent>
+        </Card>
+        <Card className="w-80 bg-slate-800">
+          <CardHeader>
+            <CardTitle className="text-center">
+              Live nézők
+              <span className="relative inline-flex ml-2">
+                <span className="absolute inline-flex h-3 w-3 rounded-full bg-red-500 opacity-75 animate-ping"></span>
+                <span className="relative inline-flex h-3 w-3 rounded-full bg-red-600"></span>
+              </span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {loading ? (
+              <Skeleton className="h-16 w-full bg-slate-700" />
+            ) : (
+              <p className="text-6xl text-center">1 207</p>
+            )}
           </CardContent>
         </Card>
       </div>
       <div className="flex flex-wrap">
         <div className="flex flex-col gap-10 p-10">
-          <Card className="w-80 max-h-40">
+          <Card className="w-80 max-h-40 bg-slate-800">
             <CardHeader>
               <CardTitle className="text-center">Összes nézettség</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-6xl text-center">105 263</p>
+              {loading ? (
+                <Skeleton className="h-16 w-full bg-slate-700" />
+              ) : (
+                <p className="text-6xl text-center">105 263</p>
+              )}
             </CardContent>
           </Card>
-          <Card className="w-80 max-h-40">
+          <Card className="w-80 max-h-40 bg-slate-800">
             <CardHeader>
-              <CardTitle className="text-center">Összes nézettség eszközönként</CardTitle>
+              <CardTitle className="text-center">
+                Összes nézettség eszközönként
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex justify-center gap-5">
-                <p className="text-3xl text-center">72 805</p>
-                <Separator orientation="vertical" />
-                <p className="text-3xl text-center">32 458</p>
-              </div>
+              {loading ? (
+                <Skeleton className="h-16 w-full bg-slate-700" />
+              ) : (
+                <div className="flex justify-center gap-5">
+                  <p className="text-3xl text-center">72 805</p>
+                  <Separator orientation="vertical" />
+                  <p className="text-3xl text-center">32 458</p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+          <Card className="w-80 max-h-40 bg-slate-800">
+            <CardHeader>
+              <CardTitle className="text-center">
+                Átlag nézettség eszközönként havonta
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {loading ? (
+                <Skeleton className="h-16 w-full bg-slate-700" />
+              ) : (
+                <div className="flex justify-center gap-5">
+                  <p className="text-3xl text-center">6 067</p>
+                  <Separator orientation="vertical" />
+                  <p className="text-3xl text-center">2 074</p>
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>
         <div className="py-10">
-          <Card>
+          <Card className="bg-slate-800">
             <ChartContainer config={chartConfig} className="h-[82dvh] w-full">
               <BarChart width={500} height={300} data={chartData}>
                 <CartesianGrid vertical={false} />

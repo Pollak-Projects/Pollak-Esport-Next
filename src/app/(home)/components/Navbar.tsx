@@ -76,7 +76,9 @@ const Navbar = () => {
         </nav>
       </div>
       <div className="max-md:hidden">
-        <Button>Bejelentkezés</Button>
+        <Button>
+          <Link href="/login">Bejelentkezés</Link>
+        </Button>
       </div>
     </header>
   );
