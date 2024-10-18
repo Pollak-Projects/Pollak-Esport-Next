@@ -68,16 +68,14 @@ const page = () => {
         </div>
       </div>
       <div className="flex flex-col gap-10 w-full">
-        {teams.map((team) => {
-          if (inputValue != "" && team.name.startsWith(inputValue)) {
-            return <TeamCard team={team} key={team.name} />;
-          } else if (inputValue == "") {
-            return <TeamCard team={team} key={team.name} />;
-          }
-        })}
+        {teams.filter((team) => team.name.startsWith(inputValue)).map((team) => (
+          <TeamCard team={team} key={team.name} />
+        ))}
       </div>
     </div>
+
   );
 };
+
 
 export default page;
