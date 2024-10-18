@@ -6,7 +6,14 @@ import { Button } from "../../../components/ui/button";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { Skeleton } from "../../../components/ui/skeleton";
-
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import logo from "@/tempimg/logo2.png";
 
 const Navbar = () => {
@@ -39,11 +46,25 @@ const Navbar = () => {
     <header className="w-full pt-10 flex justify-between items-center md:px-20 max-md:pl-10 h-[80px] absolute top-0 ">
       <div className="flex gap-10 items-center max-md:w-full">
         <div className="max-md:flex max-md:w-full max-md:justify-between max-md:items-center max-md:flex-row-reverse">
-          <div className="md:hidden flex flex-col justify-between w-[50px] h-[30px]">
-            <div className="w-full h-0.5 bg-white"></div>
-            <div className="w-full h-0.5 bg-white"></div>
-            <div className="w-full h-0.5 bg-white"></div>
-          </div>
+          <Sheet>
+            <SheetTrigger asChild>
+              <button className="md:hidden flex flex-col justify-between w-[50px] h-[30px]">
+                <div className="w-full h-0.5 bg-white"></div>
+                <div className="w-full h-0.5 bg-white"></div>
+                <div className="w-full h-0.5 bg-white"></div>
+              </button>
+            </SheetTrigger>
+            <SheetContent>
+              <SheetHeader>
+                <SheetTitle>Are you absolutely sure?</SheetTitle>
+                <SheetDescription>
+                  This action cannot be undone. This will permanently delete
+                  your account and remove your data from our servers.
+                </SheetDescription>
+              </SheetHeader>
+            </SheetContent>
+          </Sheet>
+
           {isLoading ? (
             <Skeleton className="w-[70px] h-[70px] rounded-full" />
           ) : (
