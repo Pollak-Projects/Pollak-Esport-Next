@@ -19,7 +19,7 @@ import {
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton"; // Import Skeleton component
 
-export function NewTeam() {
+const JoinTeam = () => {
   const [loading, setLoading] = useState(true);
 
   // Simulate loading
@@ -116,4 +116,4 @@ export function NewTeam() {
   );
 }
 
-export default NewTeam;
+export default JoinTeam;

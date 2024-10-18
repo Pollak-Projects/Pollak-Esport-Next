@@ -49,7 +49,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-const page = () => {
+const Page = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -197,4 +197,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

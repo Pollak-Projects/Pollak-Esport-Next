@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 
-export function NewTeam() {
+const NewTeam = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

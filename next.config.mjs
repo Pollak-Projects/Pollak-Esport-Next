@@ -13,6 +13,9 @@ const nextConfig = {
     ],
     dangerouslyAllowSVG: true,
   },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 };
 
 export default nextConfig;

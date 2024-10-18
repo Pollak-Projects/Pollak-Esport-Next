@@ -15,7 +15,7 @@
   import Link from "next/link";
   import { Skeleton } from "@/components/ui/skeleton";
 
-  export function Login() {
+const Login = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
