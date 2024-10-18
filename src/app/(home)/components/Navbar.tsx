@@ -43,7 +43,7 @@ const Navbar = () => {
   }, []);
 
   return (
-    <header className="w-full pt-10 flex justify-between items-center md:px-20 max-md:pl-10 h-[80px] absolute top-0 ">
+    <header className="w-[100dvw] pt-10 flex justify-between items-center md:px-20 max-md:pl-10 h-[80px] absolute top-0 ">
       <div className="flex gap-10 items-center max-md:w-full">
         <div className="max-md:flex max-md:w-full max-md:justify-between max-md:items-center max-md:flex-row-reverse">
           <Sheet>
@@ -56,12 +56,34 @@ const Navbar = () => {
             </SheetTrigger>
             <SheetContent>
               <SheetHeader>
-                <SheetTitle>Are you absolutely sure?</SheetTitle>
-                <SheetDescription>
-                  This action cannot be undone. This will permanently delete
-                  your account and remove your data from our servers.
-                </SheetDescription>
+                <SheetTitle>Navigáció</SheetTitle>
+                <SheetDescription></SheetDescription>
               </SheetHeader>
+              <nav>
+                <ul className="flex flex-col gap-4 text-2xl w-full items-start mt-3">
+                  {Links.map((link) => {
+                    if (link.link === pathname) {
+                      return (
+                        <li key={link.title}>
+                          <Link
+                            href={link.link}
+                            className="text-white/50 transition-all"
+                          >
+                            {link.title}
+                          </Link>
+                        </li>
+                      );
+                    }
+                    return (
+                      <li className="" key={link.title}>
+                        <Link href={link.link} className="text-white">
+                          {link.title}
+                        </Link>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </nav>
             </SheetContent>
           </Sheet>
 

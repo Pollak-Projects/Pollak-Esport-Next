@@ -15,7 +15,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="hu">
-      <body className="antialiased pt-[100px] dark min-h-screen w-full bg-gradient-to-t  from-purple-950/90 from-[3.6%] to-[90.4%] to-background ">
+      <body className="antialiased dark min-h-screen w-full bg-gradient-to-t  from-purple-950/90 from-[3.6%] to-[90.4%] to-background ">
         <Navbar />
         {children}
         <Toaster />

@@ -49,9 +49,9 @@ const page = () => {
       ],
     },
   ];
-  console.log(inputValue);
+
   return (
-    <div className=" max-w-[1500px] mx-auto mt-20 flex flex-col">
+    <div className="pt-[140px] max-w-[1500px] h-screen mx-auto flex flex-col">
       <div className="w-full border-b-white border-b-2 mb-10">
         <div className="bg-white max-w-[600px] h-[50px] mb-2 flex rounded-xl">
           <div className="text-black h-full w-[50px] flex justify-center items-center">
@@ -68,14 +68,14 @@ const page = () => {
         </div>
       </div>
       <div className="flex flex-col gap-10 w-full">
-        {teams.filter((team) => team.name.startsWith(inputValue)).map((team) => (
-          <TeamCard team={team} key={team.name} />
-        ))}
+        {teams
+          .filter((team) => team.name.startsWith(inputValue))
+          .map((team) => (
+            <TeamCard team={team} key={team.name} />
+          ))}
       </div>
     </div>
-
   );
 };
-
 
 export default page;

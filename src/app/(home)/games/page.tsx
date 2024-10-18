@@ -60,7 +60,7 @@ const page = () => {
 
   return (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 p-4 mx-auto max-w-[1500px] ">
+      <div className="grid pt-[100px] grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 p-4 mx-auto max-w-[1500px] ">
         {loading
           ? Array.from({ length: 4 }).map((_, i) => (
               <Card
@@ -89,7 +89,7 @@ const page = () => {
               <Link key={game.title} href={`/games/${i}`}>
                 <Card
                   className={cn(
-                    "shadow-md shadow-purple-900 border-[0px] hover:scale-105 duration-300 transition-all ease-in-out hover:shadow-2xl hover:shadow-purple-900 border-b-purple-900 border-b-4 bg-black/[0] backdrop-blur-xl ",
+                    "shadow-md shadow-purple-900 border-[0px] hover:scale-105 duration-300 transition-all ease-in-out hover:shadow-2xl  hover:shadow-purple-900 border-b-purple-900 border-b-4 bg-black/[0] backdrop-blur-xl ",
                     {
                       "opacity-10":
                         hoveredCardId != i && hoveredCardId != undefined,
