@@ -5,7 +5,7 @@ import { FaCrown } from "react-icons/fa";
 
 const TeamCard = ({ team }: { team: team }) => {
   return (
-    <div className="w-full bg-black/10 flex max-md:flex-col max-md:gap-10 items-center justify-between border-black/20 border-[3px] backdrop-blur-3xl py-[20px] h-fit px-20 rounded-2xl shadow-sm shadow-purple-900">
+    <div className="w-full bg-black/10 flex max-md:flex-col max-md:gap-10 items-center justify-between border-black/20 border-[3px] backdrop-blur-md py-[20px] h-fit px-20 rounded-2xl shadow-sm shadow-purple-900">
       <div className="h-full">
         <div className="flex gap-5 items-center h-full">
           <Image

@@ -54,9 +54,11 @@ const Navbar = () => {
                 <div className="w-full h-0.5 bg-white"></div>
               </button>
             </SheetTrigger>
-            <SheetContent>
+            <SheetContent className="bg-black/10 backdrop-blur-md">
               <SheetHeader>
-                <SheetTitle>Navigáció</SheetTitle>
+                <SheetTitle className="text-3xl border-b-2 border-b-white pb-1">
+                  Navigáció
+                </SheetTitle>
                 <SheetDescription></SheetDescription>
               </SheetHeader>
               <nav>
