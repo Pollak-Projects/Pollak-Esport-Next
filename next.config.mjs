@@ -10,6 +10,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "placehold.co",
       },
+      {
+        protocol: "https",
+        hostname: "img.icons8.com",
+      }
     ],
     dangerouslyAllowSVG: true,
   },

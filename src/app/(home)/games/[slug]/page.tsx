@@ -10,8 +10,8 @@ import {
   IRenderSeedProps,
 } from "react-brackets";
 import { Skeleton } from "@/components/ui/skeleton";
-
-const page = ({ params }: { params: { slug: string } }) => {
+const page = async ({ params }: { params: Promise<{ slug: string }> }) => {
+  const { slug } = await params;
   const [loading, setLoading] = useState(true);
   const [rounds, setRounds] = useState<IRoundProps[]>([]);
 

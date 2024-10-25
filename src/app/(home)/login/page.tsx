@@ -40,21 +40,34 @@ const Login = () => {
       });
     }, 1000); // Simulate login process
   };
-
+  const handleRegisterClick = () => {
+    toast("Sikeres regisztráció", {
+      description: new Date().toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+      action: {
+        label: "Törlés",
+        onClick: () => console.log("Értesítés törölve!"),
+      },
+    });
+  };
   return (
-    <div className="flex justify-center items-center min-h-screen">
-      <Tabs defaultValue="login" className="w-[400px]">
-        <TabsList>
-          <TabsTrigger value="login">Bejelentkezés</TabsTrigger>
-          <TabsTrigger value="register">Regisztráció</TabsTrigger>
+    <div className="flex justify-center items-center pt-56">
+      <Tabs defaultValue="login" className="w-68">
+        <TabsList className="mx-auto flex justify-center gap-10">
+          <TabsTrigger value="login" className="w-36">
+            Bejelentkezés
+          </TabsTrigger>
+          <TabsTrigger value="register" className="w-36">
+            Regisztráció
+          </TabsTrigger>
         </TabsList>
         <TabsContent value="login">
           <Card className="w-[350px]">
             <CardHeader>
-              <>
-                <CardTitle>Bejelentkezés</CardTitle>
-                <CardDescription>A fiókodba itt tudsz belépni.</CardDescription>
-              </>
+              <CardTitle>Bejelentkezés</CardTitle>
+              <CardDescription>A fiókodba itt tudsz belépni.</CardDescription>
             </CardHeader>
             <CardContent>
               <form>
@@ -80,15 +93,64 @@ const Login = () => {
                 </div>
               </form>
             </CardContent>
-            <CardFooter className="flex justify-between">
-              <>
-                <Button variant="outline">
-                  <Link href="/register">Regisztráció</Link>
-                </Button>
-                <Button type="button" onClick={handleLoginClick}>
-                  Bejelentkezés
-                </Button>
-              </>
+            <CardFooter className="flex justify-center">
+              <Button type="button" onClick={handleLoginClick}>
+                Bejelentkezés
+              </Button>
+            </CardFooter>
+          </Card>
+        </TabsContent>
+        <TabsContent value="register">
+          <Card className="w-[350px]">
+            <CardHeader>
+              <CardTitle>Regisztráció</CardTitle>
+              <CardDescription>Fiókot itt tudsz létrehozni.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form>
+                <div className="grid w-full items-center gap-4">
+                  {["fullname", "username", "email", "password"].map(
+                    (field) => (
+                      <div key={field} className="flex flex-col space-y-1.5">
+                        <Label htmlFor={field}>
+                          {field === "fullname"
+                            ? "Teljes név"
+                            : field === "username"
+                            ? "Felhasználónév"
+                            : field === "email"
+                            ? "Email"
+                            : "Jelszó"}
+                        </Label>
+                        <Input
+                          required
+                          id={field}
+                          type={
+                            field === "email"
+                              ? "email"
+                              : field === "password"
+                              ? "password"
+                              : "text"
+                          }
+                          placeholder={
+                            field === "fullname"
+                              ? "Kis János"
+                              : field === "username"
+                              ? "kisjanos88"
+                              : field === "email"
+                              ? "kis.janos1988@gmail.com"
+                              : "************"
+                          }
+                        />
+                      </div>
+                    )
+                  )}
+                </div>
+              </form>
+            </CardContent>
+            <CardFooter className="flex justify-center">
+              <Button type="submit" onClick={handleRegisterClick}>
+                Regisztrálás
+              </Button>
             </CardFooter>
           </Card>
         </TabsContent>

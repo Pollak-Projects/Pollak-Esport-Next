@@ -121,9 +121,7 @@ const Navbar = () => {
         </nav>
       </div>
       <div className="max-md:hidden">
-        <Button>
-          <Link href="/login">Bejelentkezés</Link>
-        </Button>
+          <Link href="/login"><Image width="35" height="35" src="https://img.icons8.com/ios-filled/50/FFFFFF/enter-2.png" alt="login"/></Link>
       </div>
     </header>
   );
