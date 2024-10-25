@@ -14,7 +14,7 @@ export default function Home() {
     //   </div>
     // </div>
 
-    <div className="w-full pt-[100px] pb-10 h-screen px-10 flex justify-between max-md:flex-col">
+    (<div className="w-full pt-[100px] pb-10 h-screen px-10 flex justify-between max-md:flex-col">
       <div className="text-[7rem] h-full items-end flex max-md:text-7xl leading-none max-md:hidden  font-black">
         Pollák <br /> E-sport
       </div>
@@ -24,6 +24,6 @@ export default function Home() {
           2024.11.1 - 2024.11.10
         </div>
       </div>
-    </div>
+    </div>)
   );
 }
