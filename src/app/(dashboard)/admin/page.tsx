@@ -122,7 +122,7 @@ const Page = () => {
         </Card>
       </div>
       <div className="flex flex-wrap">
-        <div className="flex flex-col gap-10 p-10">
+        <div className="flex flex-col gap-10 p-10 py-0">
           <Card className="w-80 max-h-40 bg-slate-800">
             <CardHeader>
               <CardTitle className="text-center">Összes nézettség</CardTitle>
@@ -172,10 +172,10 @@ const Page = () => {
             </CardContent>
           </Card>
         </div>
-        <div className="py-10">
+        <div className="py-0">
           <Card className="bg-slate-800">
-            <ChartContainer config={chartConfig} className="h-[82dvh] w-full">
-              <BarChart width={500} height={300} data={chartData}>
+            <ChartContainer config={chartConfig} className="h-[70dvh] w-full">
+              <BarChart width={1100} height={600} data={chartData}>
                 <CartesianGrid vertical={false} />
                 <XAxis
                   dataKey="month"

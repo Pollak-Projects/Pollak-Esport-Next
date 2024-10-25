@@ -146,7 +146,7 @@ const Page = () => {
                                 </CardContent>
                             </Card>
                         </div>
-                        <div className="w-[90dvw] h-[85dvh]">
+                        <div className="w-[89dvw] h-[79dvh]">
                             <iframe
                                 src="https://player.twitch.tv/?channel=piratesoftware&parent=localhost"
                                 height="100%"
