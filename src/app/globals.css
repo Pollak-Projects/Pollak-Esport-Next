@@ -113,3 +113,14 @@
     @apply bg-background text-foreground;
   }
 }
+
+
+
+::-webkit-scrollbar { width: 5px; height: 3px;}
+
+::-webkit-scrollbar-track-piece { background-color: #000;}
+::-webkit-scrollbar-thumb { height: 50px; background-color: #3d3d3d; border-radius: 20px;}
+::-webkit-scrollbar-thumb:hover{
+  background-color: #5e5e5e;
+}
+::-webkit-resizer { background-color: #666;}
