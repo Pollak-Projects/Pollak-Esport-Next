@@ -28,6 +28,9 @@
     "paths": {
       "@/*": [
         "./src/*"
+      ],
+      "@logger": [
+        "./src/lib/logger"
       ]
     },
     "target": "ES2017"
