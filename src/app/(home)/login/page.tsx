@@ -22,37 +22,37 @@ export default function Login() {
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-      const timer = setTimeout(() => setLoading(false), 2000); // Simulate loading time
-      return () => clearTimeout(timer);
+        const timer = setTimeout(() => setLoading(false), 2000); // Simulate loading time
+        return () => clearTimeout(timer);
     }, []);
 
     // This can ONLY work from the server side
     const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
-      setLoading(false);
-      event.preventDefault();
+        setLoading(false);
+        event.preventDefault();
 
-      const formData = new FormData(event.currentTarget);
+        const formData = new FormData(event.currentTarget);
 
-      console.log(formData.get("username"));
-      console.log(formData.get("password"));
+        console.log(formData.get("username"));
+        console.log(formData.get("password"));
 
-      // TODO add proper form validation
-      if (formData.get("username") == "" || formData.get("password") == "") {
-        toast("Hiba történt a bejelentkezés során", {
-          description: "Kérlek próbáld újra!",
-          action: {
-            label: "Törlés",
-            onClick: () => console.log("Értesítés törölve!"),
-          },
+        // TODO add proper form validation
+        if (formData.get("username") == "" || formData.get("password") == "") {
+            toast("Hiba történt a bejelentkezés során", {
+                description: "Kérlek próbáld újra!",
+                action: {
+                    label: "Törlés",
+                    onClick: () => console.log("Értesítés törölve!"),
+                },
+            });
+            return
+        }
+
+        await signIn("credentials", {
+            username: formData.get("username"),
+            password: formData.get("password"),
+            redirect: false,
         });
-        return
-      }
-
-      await signIn("credentials", {
-        username: formData.get("username"),
-        password: formData.get("password"),
-        redirect: false,
-      });
         setLoading(false);
 
         toast("Sikeres bejelentkezés", {
@@ -79,113 +79,116 @@ export default function Login() {
         });
     };
 
-  return (
-      <div className="flex justify-center items-center pt-56">
-          <Tabs defaultValue="login" className="w-68">
-              <TabsList className="mx-auto flex justify-center gap-10">
-                  <TabsTrigger value="login" className="w-36">
-                      Bejelentkezés
-                  </TabsTrigger>
-                  <TabsTrigger value="register" className="w-36">
-                      Regisztráció
-                  </TabsTrigger>
-              </TabsList>
-              <TabsContent value="login">
-                  <Card className="w-[350px]">
-                      <CardHeader>
-                          <CardTitle>Bejelentkezés</CardTitle>
-                          <CardDescription>A fiókodba itt tudsz belépni.</CardDescription>
-                      </CardHeader>
-                      <CardContent>
-                          <form
-                              action="/api/auth/callback/credentials"
-                              onSubmit={onSubmit}
-                              method={"post"}
-                          >
-                              <div className="grid w-full items-center gap-4">
-                                  <div className="flex flex-col space-y-1.5">
-                                      <Label htmlFor="username">Felhasználónév</Label>
-                                      <Input
-                                          required
-                                          id="username"
-                                          type="text"
-                                          placeholder="kisjanos88"
-                                      />
-                                  </div>
-                                  <div className="flex flex-col space-y-1.5">
-                                      <Label htmlFor="password">Jelszó</Label>
-                                      <Input
-                                          required
-                                          id="password"
-                                          type="password"
-                                          placeholder="************"
-                                      />
-                                  </div>
-                              </div>
-                          </form>
-                      </CardContent>
-                      <CardFooter className="flex justify-center">
-                          <Button type="submit">
-                              Bejelentkezés
-                          </Button>
-                      </CardFooter>
-                  </Card>
-              </TabsContent>
-              <TabsContent value="register">
-                  <Card className="w-[350px]">
-                      <CardHeader>
-                          <CardTitle>Regisztráció</CardTitle>
-                          <CardDescription>Fiókot itt tudsz létrehozni.</CardDescription>
-                      </CardHeader>
-                      <CardContent>
-                          <form>
-                              <div className="grid w-full items-center gap-4">
-                                  {["fullname", "username", "email", "password"].map(
-                                      (field) => (
-                                          <div key={field} className="flex flex-col space-y-1.5">
-                                              <Label htmlFor={field}>
-                                                  {field === "fullname"
-                                                      ? "Teljes név"
-                                                      : field === "username"
-                                                          ? "Felhasználónév"
-                                                          : field === "email"
-                                                              ? "Email"
-                                                              : "Jelszó"}
-                                              </Label>
-                                              <Input
-                                                  required
-                                                  id={field}
-                                                  type={
-                                                      field === "email"
-                                                          ? "email"
-                                                          : field === "password"
-                                                              ? "password"
-                                                              : "text"
-                                                  }
-                                                  placeholder={
-                                                      field === "fullname"
-                                                          ? "Kis János"
-                                                          : field === "username"
-                                                              ? "kisjanos88"
-                                                              : field === "email"
-                                                                  ? "kis.janos1988@gmail.com"
-                                                                  : "************"
-                                                  }
-                                              />
-                                          </div>
-                                      )
-                                  )}
-                              </div>
-                          </form>
-                      </CardContent>
-                      <CardFooter className="flex justify-center">
-                          <Button type="submit" onClick={handleRegisterClick}>
-                              Regisztrálás
-                          </Button>
-                      </CardFooter>
-                  </Card>
-              </TabsContent>
-          </Tabs>
-      </div>
-  );
+    return (
+        <div className="flex justify-center items-center pt-56">
+            <Tabs defaultValue="login" className="w-68">
+                <TabsList className="mx-auto flex justify-center gap-10">
+                    <TabsTrigger value="login" className="w-36">
+                        Bejelentkezés
+                    </TabsTrigger>
+                    <TabsTrigger value="register" className="w-36">
+                        Regisztráció
+                    </TabsTrigger>
+                </TabsList>
+                <TabsContent value="login">
+                    <Card className="w-[350px]">
+                        <CardHeader>
+                            <CardTitle>Bejelentkezés</CardTitle>
+                            <CardDescription>A fiókodba itt tudsz belépni.</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <form
+                                action="/api/auth/callback/credentials"
+                                onSubmit={onSubmit}
+                                method={"post"}
+                            >
+                                <div className="grid w-full items-center gap-4">
+                                    <div className="flex flex-col space-y-1.5">
+                                        <Label htmlFor="username">Felhasználónév</Label>
+                                        <Input
+                                            required
+                                            id="username"
+                                            name="username"
+                                            type="text"
+                                            placeholder="kisjanos88"
+                                        />
+                                    </div>
+                                    <div className="flex flex-col space-y-1.5">
+                                        <Label htmlFor="password">Jelszó</Label>
+                                        <Input
+                                            required
+                                            id="password"
+                                            name="password"
+                                            type="password"
+                                            placeholder="************"
+                                        />
+                                    </div>
+                                </div>
+                                <Button type="submit">
+                                    Bejelentkezés
+                                </Button>
+                            </form>
+                        </CardContent>
+                        <CardFooter className="flex justify-center">
 
+                        </CardFooter>
+                    </Card>
+                </TabsContent>
+                <TabsContent value="register">
+                    <Card className="w-[350px]">
+                        <CardHeader>
+                            <CardTitle>Regisztráció</CardTitle>
+                            <CardDescription>Fiókot itt tudsz létrehozni.</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <form>
+                                <div className="grid w-full items-center gap-4">
+                                    {["fullname", "username", "email", "password"].map(
+                                        (field) => (
+                                            <div key={field} className="flex flex-col space-y-1.5">
+                                                <Label htmlFor={field}>
+                                                    {field === "fullname"
+                                                        ? "Teljes név"
+                                                        : field === "username"
+                                                        ? "Felhasználónév"
+                                                        : field === "email"
+                                                        ? "Email"
+                                                        : "Jelszó"}
+                                                </Label>
+                                                <Input
+                                                    required
+                                                    id={field}
+                                                    type={
+                                                        field === "email"
+                                                        ? "email"
+                                                        : field === "password"
+                                                        ? "password"
+                                                        : "text"
+                                                    }
+                                                    placeholder={
+                                                        field === "fullname"
+                                                            ? "Kis János"
+                                                            : field === "username"
+                                                            ? "kisjanos88"
+                                                            : field === "email"
+                                                            ? "kis.janos1988@gmail.com"
+                                                            : "************"
+                                                    }
+                                                />
+                                            </div>
+                                        )
+                                    )}
+                                </div>
+                            </form>
+                        </CardContent>
+                        <CardFooter className="flex justify-center">
+                            <Button type="submit" onClick={handleRegisterClick}>
+                                Regisztrálás
+                            </Button>
+                        </CardFooter>
+                    </Card>
+                </TabsContent>
+            </Tabs>
+        </div>
+    );
+}
