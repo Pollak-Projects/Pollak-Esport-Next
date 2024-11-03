@@ -77,26 +77,6 @@ const NewTeam = () => {
                   <Label htmlFor="name">Csapat neve</Label>
                   <Input id="name" placeholder="Csapat név" />
                 </div>
-                <div className="flex flex-col space-y-1.5">
-                  <Label htmlFor="osztaly">Osztály</Label>
-                  <Select>
-                    <SelectTrigger id="osztaly">
-                      <SelectValue placeholder="Osztály" />
-                    </SelectTrigger>
-                    <SelectContent position="popper">
-                      <SelectItem value="9.A">9.A</SelectItem>
-                      <SelectItem value="9.B">9.B</SelectItem>
-                      <SelectItem value="10.A">10.A</SelectItem>
-                      <SelectItem value="10.B">10.B</SelectItem>
-                      <SelectItem value="11.A">11.A</SelectItem>
-                      <SelectItem value="11.B">11.B</SelectItem>
-                      <SelectItem value="12.A">12.A</SelectItem>
-                      <SelectItem value="12.B">12.B</SelectItem>
-                      <SelectItem value="13.A">13.A IRÜ SZF1 SZF2</SelectItem>
-                      <SelectItem value="13.B">13.B EE IPI</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
               </div>
             </form>
           )}
@@ -121,6 +101,6 @@ const NewTeam = () => {
       </Card>
     </div>
   );
-}
+};
 
 export default NewTeam;

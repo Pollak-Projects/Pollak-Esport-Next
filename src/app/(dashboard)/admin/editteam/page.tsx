@@ -10,15 +10,16 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton"; // Assuming you have a Skeleton component
 
 const EditTeam = () => {
@@ -35,7 +36,7 @@ const EditTeam = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    toast("Csapat sikeresen létrehozva", {
+    toast("Csapat sikeresen szerkesztve", {
       description: new Date().toLocaleTimeString([], {
         hour: "2-digit",
         minute: "2-digit",
@@ -49,7 +50,7 @@ const EditTeam = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen">
-      <Card className="w-[350px]">
+      <Card className="max-w-[600px]">
         <CardHeader>
           {loading ? (
             <>
@@ -76,28 +77,36 @@ const EditTeam = () => {
             <form onSubmit={handleSubmit}>
               <div className="grid w-full items-center gap-4">
                 <div className="flex flex-col space-y-1.5">
-                  <Label htmlFor="name">Csapat neve</Label>
-                  <Input id="name" placeholder="Csapat név" />
-                </div>
-                <div className="flex flex-col space-y-1.5">
-                  <Label htmlFor="osztaly">Osztály</Label>
-                  <Select>
-                    <SelectTrigger id="osztaly">
-                      <SelectValue placeholder="Osztály" />
-                    </SelectTrigger>
-                    <SelectContent position="popper">
-                      <SelectItem value="9.A">9.A</SelectItem>
-                      <SelectItem value="9.B">9.B</SelectItem>
-                      <SelectItem value="10.A">10.A</SelectItem>
-                      <SelectItem value="10.B">10.B</SelectItem>
-                      <SelectItem value="11.A">11.A</SelectItem>
-                      <SelectItem value="11.B">11.B</SelectItem>
-                      <SelectItem value="12.A">12.A</SelectItem>
-                      <SelectItem value="12.B">12.B</SelectItem>
-                      <SelectItem value="13.A">13.A IRÜ SZF1 SZF2</SelectItem>
-                      <SelectItem value="13.B">13.B EE IPI</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <Label>Csapatok</Label>
+                  <Table>
+                    <TableCaption>Nincs több csapat</TableCaption>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Csapat neve</TableHead>
+                        <TableHead>Tulajdonos</TableHead>
+                        <TableHead>Létszám</TableHead>
+                        <TableHead className="text-right">Kezelés</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      <TableRow>
+                        <TableCell className="font-medium">Iron 8</TableCell>
+                        <TableCell>Kis János</TableCell>
+                        <TableCell>kis.janos1988@gmail.com</TableCell>
+                        <TableCell className="text-right">
+                          {" "}
+                          <Button variant="ghost">
+                            <img
+                              width="20"
+                              height="20"
+                              src="https://img.icons8.com/metro/FFFFFF/26/pencil.png"
+                              alt="trash"
+                            />
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
                 </div>
               </div>
             </form>
@@ -114,7 +123,12 @@ const EditTeam = () => {
               <Button variant="outline" disabled={loading} aria-label="Mégse">
                 Mégse
               </Button>
-              <Button type="submit" onClick={handleSubmit} disabled={loading} aria-label="Mentés">
+              <Button
+                type="submit"
+                onClick={handleSubmit}
+                disabled={loading}
+                aria-label="Mentés"
+              >
                 Mentés
               </Button>
             </>

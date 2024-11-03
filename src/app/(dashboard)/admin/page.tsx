@@ -171,26 +171,31 @@ const Page = () => {
               )}
             </CardContent>
           </Card>
-        </div>
-        <div className="py-0">
-          <Card className="bg-slate-800">
-            <ChartContainer config={chartConfig} className="h-[70dvh] w-full">
-              <BarChart width={1100} height={600} data={chartData}>
-                <CartesianGrid vertical={false} />
-                <XAxis
-                  dataKey="month"
-                  tickLine={false}
-                  tickMargin={10}
-                  axisLine={false}
-                  tickFormatter={(value) => value.slice(0, 3)}
-                />
-                <ChartTooltip content={<ChartTooltipContent />} />
-                <ChartLegend content={<ChartLegendContent />} />
-                <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
-                <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
-              </BarChart>
-            </ChartContainer>
-          </Card>
+{/* use min-h to make it responsive */}
+          <div className="py-0">
+            <Card className="bg-slate-800">
+              <ChartContainer config={chartConfig} className="h-[70dvh] w-full">
+                <BarChart width={1100} height={600} data={chartData}>
+                  <CartesianGrid vertical={false} />
+                  <XAxis
+                    dataKey="month"
+                    tickLine={false}
+                    tickMargin={10}
+                    axisLine={false}
+                    tickFormatter={(value) => value.slice(0, 3)}
+                  />
+                  <ChartTooltip content={<ChartTooltipContent />} />
+                  <ChartLegend content={<ChartLegendContent />} />
+                  <Bar
+                    dataKey="desktop"
+                    fill="var(--color-desktop)"
+                    radius={4}
+                  />
+                  <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
+                </BarChart>
+              </ChartContainer>
+            </Card>
+          </div>
         </div>
       </div>
     </>
