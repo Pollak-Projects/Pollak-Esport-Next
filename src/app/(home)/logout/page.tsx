@@ -5,7 +5,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-export default function Logout() {
+const Logout=() => {
   const [dots, setDots] = useState("");
 
   useEffect(() => {
@@ -29,3 +29,5 @@ export default function Logout() {
     </div>
   );
 }
+
+export default Logout;

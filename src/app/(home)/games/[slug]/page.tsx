@@ -10,7 +10,7 @@ import {
   IRenderSeedProps,
 } from "react-brackets";
 import { Skeleton } from "@/components/ui/skeleton";
-const page = async ({ params }: { params: Promise<{ slug: string }> }) => {
+const BracketsPage = async ({ params }: { params: Promise<{ slug: string }> }) => {
   const { slug } = await params;
   const [loading, setLoading] = useState(true);
   const [rounds, setRounds] = useState<IRoundProps[]>([]);
@@ -148,4 +148,4 @@ const CustomSeed = ({
   );
 };
 
-export default page;
+export default BracketsPage;

@@ -1,11 +1,10 @@
 "use client";
-import Image from "next/image";
 import React, { useState } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
 import TeamCard from "../components/TeamCard";
 import { type team } from "@/app";
 
-const page = () => {
+const Teams = () => {
   const [inputValue, setInputValue] = useState("");
 
   function handleChange(e: any) {
@@ -78,4 +77,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Teams;

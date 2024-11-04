@@ -18,7 +18,7 @@ import { signIn } from "next-auth/react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 
-export default function Login() {
+const Login=() => {
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
@@ -192,3 +192,4 @@ export default function Login() {
         </div>
     );
 }
+export default Login;

@@ -14,7 +14,7 @@ import img from "../../../tempimg/r6 card (1v1).png";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 
-const page = () => {
+const Games = () => {
   const [loading, setLoading] = useState(true);
   const [hoveredCardId, setHoveredCardId] = useState<number>();
   const games = [
@@ -129,4 +129,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Games;

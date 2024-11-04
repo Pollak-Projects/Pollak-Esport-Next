@@ -11,7 +11,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 
-const Page = () => {
+const Stats = () => {
     const [loading, setLoading] = useState(true);
     const [isClient, setIsClient] = useState(false);
 
@@ -165,4 +165,4 @@ const Page = () => {
     );
 };
 
-export default Page;
+export default Stats;
