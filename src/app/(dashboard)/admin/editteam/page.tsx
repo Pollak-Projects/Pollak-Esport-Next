@@ -92,7 +92,7 @@ const EditTeam = () => {
                       <TableRow>
                         <TableCell className="font-medium">Iron 8</TableCell>
                         <TableCell>Kis János</TableCell>
-                        <TableCell>kis.janos1988@gmail.com</TableCell>
+                        <TableCell>1</TableCell>
                         <TableCell className="text-right">
                           {" "}
                           <Button variant="ghost">
