@@ -21,6 +21,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton"; // Assuming you have a Skeleton component
+import { SquarePen } from "lucide-react";
 
 const EditTeam = () => {
   const [loading, setLoading] = useState(true);
@@ -96,12 +97,7 @@ const EditTeam = () => {
                         <TableCell className="text-right">
                           {" "}
                           <Button variant="ghost">
-                            <img
-                              width="20"
-                              height="20"
-                              src="https://img.icons8.com/metro/FFFFFF/26/pencil.png"
-                              alt="trash"
-                            />
+                            <SquarePen />
                           </Button>
                         </TableCell>
                       </TableRow>

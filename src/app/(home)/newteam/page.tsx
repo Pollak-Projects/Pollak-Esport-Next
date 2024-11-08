@@ -75,7 +75,7 @@ const NewTeam = () => {
               <div className="grid w-full items-center gap-4">
                 <div className="flex flex-col space-y-1.5">
                   <Label htmlFor="name">Csapat neve</Label>
-                  <Input id="name" placeholder="Csapat név" />
+                  <Input id="name" placeholder="Iron 8" />
                 </div>
               </div>
             </form>

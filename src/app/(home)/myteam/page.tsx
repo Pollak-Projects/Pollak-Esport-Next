@@ -11,6 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Trash2 } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -38,7 +39,9 @@ const MyTeam = () => {
           <form>
             <div className="grid w-full items-center gap-4">
               <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="name">Csapat neve (14 napos várakozási idő)</Label>
+                <Label htmlFor="name">
+                  Csapat neve (14 napos várakozási idő)
+                </Label>
                 <Input id="name" placeholder="Iron 8" />
               </div>
               <div className="flex flex-col space-y-1.5">
@@ -61,28 +64,23 @@ const MyTeam = () => {
                       <TableCell className="text-right">
                         {" "}
                         <Button variant="ghost">
-                          <img
-                            width="20"
-                            height="20"
-                            src="https://img.icons8.com/metro/FF0000/26/trash.png"
-                            alt="trash"
-                          />
+                          <Trash2 color="red"/>
                         </Button>
                       </TableCell>
                     </TableRow>
                   </TableBody>
                 </Table>
               </div>
-                <div className="flex flex-col space-y-1.5 items-center">
+              <div className="flex flex-col space-y-1.5 items-center">
                 <Label>Csatlakozási kód</Label>
                 <InputOTP disabled maxLength={6} value="J48K7S">
                   <InputOTPGroup>
-                  <InputOTPSlot index={0} />
-                  <InputOTPSlot index={1} />
-                  <InputOTPSlot index={2} />
-                  <InputOTPSlot index={3} />
-                  <InputOTPSlot index={4} />
-                  <InputOTPSlot index={5} />
+                    <InputOTPSlot index={0} />
+                    <InputOTPSlot index={1} />
+                    <InputOTPSlot index={2} />
+                    <InputOTPSlot index={3} />
+                    <InputOTPSlot index={4} />
+                    <InputOTPSlot index={5} />
                   </InputOTPGroup>
                 </InputOTP>
               </div>
