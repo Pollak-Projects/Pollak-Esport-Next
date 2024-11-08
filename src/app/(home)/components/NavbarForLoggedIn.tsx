@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
-import { Button } from "../../../components/ui/button";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { Skeleton } from "../../../components/ui/skeleton";
@@ -14,10 +13,18 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import logo from "@/tempimg/logo2.png";
-import { LogIn } from "lucide-react";
+import { User, Users, LogOut, Gamepad2 } from "lucide-react";
 
-const Navbar = () => {
+const NavbarForLoggedIn = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const Links = [
@@ -124,12 +131,44 @@ const Navbar = () => {
         </nav>
       </div>
       <div className="max-md:hidden">
-        <Link href="/login">
-          <LogIn size={40} />
-        </Link>
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+            {" "}
+            <Image width={50} height={50} src={logo} alt="profile" priority />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuLabel>kisjanos88</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <Link href="/login">
+              <DropdownMenuItem className="hover:cursor-pointer">
+                <User />
+                Fiókom
+              </DropdownMenuItem>
+            </Link>
+            <Link href="/myteam">
+              <DropdownMenuItem className="hover:cursor-pointer">
+                <Users />
+                Csapatom
+              </DropdownMenuItem>
+            </Link>
+            <Link href="/games/0">
+              <DropdownMenuItem className="hover:cursor-pointer">
+                <Gamepad2 />
+                Versenyeim
+              </DropdownMenuItem>
+            </Link>
+            <DropdownMenuSeparator />
+            <Link href="/logout">
+              <DropdownMenuItem className="hover:cursor-pointer">
+                <LogOut />
+                Kijelentkezés
+              </DropdownMenuItem>
+            </Link>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </header>
   );
 };
 
-export default Navbar;
+export default NavbarForLoggedIn;
