@@ -38,21 +38,30 @@ const BracketsPage = () => {
               date: new Date(2024, 11, 20, 3, 0, 0).toLocaleString("hu-HU", {
                 hour12: false,
               }),
-              teams: [{ name: "Team A" }, { name: "Team F" }],
+              teams: [
+                { name: "Team A", score: 3 },
+                { name: "Team F", score: 1 },
+              ],
             },
             {
               id: 2,
               date: new Date(2024, 11, 20, 3, 0, 0).toLocaleString("hu-HU", {
                 hour12: false,
               }),
-              teams: [{ name: "Team C" }, { name: "Team G" }],
+              teams: [
+                { name: "Team C", score: 3 },
+                { name: "Team G", score: 1 },
+              ],
             },
             {
               id: 4,
               date: new Date(2024, 11, 20, 3, 0, 0).toLocaleString("hu-HU", {
                 hour12: false,
               }),
-              teams: [{ name: "Team D" }, { name: "Team E" }],
+              teams: [
+                { name: "Team D", score: 3 },
+                { name: "Team E", score: 1 },
+              ],
             },
           ],
         },
@@ -64,14 +73,20 @@ const BracketsPage = () => {
               date: new Date(2024, 11, 20, 3, 0, 0).toLocaleString("hu-HU", {
                 hour12: false,
               }),
-              teams: [{ name: "Team A" }, { name: "Team B" }],
+              teams: [
+                { name: "Team A", score: 3 },
+                { name: "Team B", score: 1 },
+              ],
             },
             {
               id: 2,
               date: new Date(2024, 11, 20, 3, 0, 0).toLocaleString("hu-HU", {
                 hour12: false,
               }),
-              teams: [{ name: "Team C" }, { name: "Team D" }],
+              teams: [
+                { name: "Team C", score: 3 },
+                { name: "Team D", score: 1 },
+              ],
             },
           ],
         },
@@ -83,18 +98,21 @@ const BracketsPage = () => {
               date: new Date(2024, 11, 20, 3, 0, 0).toLocaleString("hu-HU", {
                 hour12: false,
               }),
-              teams: [{ name: "Team A" }, { name: "Team C" }],
+              teams: [
+                { name: "Team A", score: 3 },
+                { name: "Team C", score: 1 },
+              ],
             },
           ],
         },
       ]);
       setLoading(false);
-    }, 0); // Simulate a 2-second loading time
+    }, 1000); // Simulate a 2-second loading time
   }, []);
 
   return (
     <div className="w-full h-full flex pt-[150px] flex-col px-32">
-      <div className="border-b-[1px] border-b-white/20 w-full text-3xl pb-5">
+      <div className="border-b-[1px] border-b-white/20 w-full text-3xl pb-2">
         Ranbow Six Seige - 1v1 - 2024.11.1
       </div>
       {loading ? (
@@ -117,12 +135,7 @@ const BracketsPage = () => {
   );
 };
 
-const CustomSeed = ({
-  seed,
-  breakpoint,
-  roundIndex,
-  seedIndex,
-}: IRenderSeedProps) => {
+const CustomSeed = ({ seed, breakpoint }: IRenderSeedProps) => {
   return (
     <Seed mobileBreakpoint={breakpoint}>
       <SeedItem className="!rounded-xl">
@@ -143,9 +156,9 @@ const CustomSeed = ({
               1
             </div>
           </SeedTeam>
-          <SeedTeam className="text-white/20 border-t-[1px] border-t-black !py-0 !px-0 h-full">
+          <SeedTeam className="!py-0 !px-0 h-full text-slate-400 border-t-slate-900 border-t-[1px]">
             <div className="flex flex-shrink-0 gap-2">
-              <div className="px-2 py-2">{seed.teams[1]?.score}</div>
+              <div className="px-2 py2">{seed.teams[1]?.score}</div>
               <Image
                 src={"https://placehold.co/25x25"}
                 alt={"team logo"}
@@ -155,10 +168,11 @@ const CustomSeed = ({
               />
               {seed.teams[1]?.name || "NO TEAM "}
             </div>
-            <div className="px-2 py-2 bg-slate-600 rounded-ee-xl">0</div>
+            <div className="bg-slate-600 h-full py-2 px-2 rounded-ee-xl">0</div>
           </SeedTeam>
         </div>
       </SeedItem>
+      <div className="text-xs mt-1 text-slate-400">{seed.date}</div>
     </Seed>
   );
 };

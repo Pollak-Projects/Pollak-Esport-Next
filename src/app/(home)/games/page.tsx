@@ -60,19 +60,18 @@ const Games = () => {
 
   return (
     <>
-      <div className="grid pt-[100px] grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 p-4 mx-auto max-w-[1500px] ">
+      <div className="grid pt-[100px] grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 p-4 mx-auto max-w-[1400px] ">
         {loading
           ? Array.from({ length: 4 }).map((_, i) => (
               <Card
                 key={i}
-                className="shadow-md shadow-purple-900 border-b-purple-900 border-b-4 bg-black/20"
+                className="shadow-md shadow-purple-900 w-[400px] border-b-purple-900 border-b-4 bg-black/20"
               >
-                <div className="relative w-full h-[150px]">
+                <div className="relative w-full h-[130px]">
                   <Skeleton className="w-full h-full" />
                 </div>
                 <CardHeader>
                   <Skeleton className="h-6 w-3/4" />
-                  <Skeleton className="h-4 w-1/2 mt-2" />
                 </CardHeader>
                 <CardContent>
                   <Skeleton className="h-4 w-full" />
@@ -89,7 +88,7 @@ const Games = () => {
               <Link key={game.title} href={`/games/${i}`}>
                 <Card
                   className={cn(
-                    "shadow-md shadow-purple-900 border-[0px] hover:scale-105 duration-300 transition-all ease-in-out hover:shadow-2xl  hover:shadow-purple-900 border-b-purple-900 border-b-4 bg-black/[0] backdrop-blur-xl ",
+                    "shadow-md shadow-purple-900 border-[0px] w-[400px] hover:scale-105 duration-300 transition-all ease-in-out hover:shadow-2xl  hover:shadow-purple-900 border-b-purple-900 border-b-4 bg-black/[0] backdrop-blur-xl ",
                     {
                       "opacity-10":
                         hoveredCardId != i && hoveredCardId != undefined,
@@ -99,7 +98,7 @@ const Games = () => {
                   onMouseLeave={() => setHoveredCardId(undefined)}
                 >
                   <div className=""></div>
-                  <div className="relative w-full h-[150px]">
+                  <div className="relative w-full h-[130px]">
                     <Image
                       src={game.image}
                       alt={game.title}
@@ -109,7 +108,6 @@ const Games = () => {
                   </div>
                   <CardHeader>
                     <CardTitle>{game.title}</CardTitle>
-                    <CardDescription>{game.sub}</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <p>{game.description}</p>
