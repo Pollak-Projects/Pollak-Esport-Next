@@ -22,7 +22,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import logo from "@/tempimg/logo2.png";
-import { User, Users, LogOut, Gamepad2 } from "lucide-react";
+import { User, Users, LogOut, Gamepad2, Settings } from "lucide-react";
 
 const NavbarForLoggedIn = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -155,6 +155,13 @@ const NavbarForLoggedIn = () => {
               <DropdownMenuItem className="hover:cursor-pointer">
                 <Gamepad2 />
                 Versenyeim
+              </DropdownMenuItem>
+            </Link>
+            <DropdownMenuSeparator />
+            <Link href="/settings">
+              <DropdownMenuItem className="hover:cursor-pointer">
+                <Settings />
+                Beállítások
               </DropdownMenuItem>
             </Link>
             <DropdownMenuSeparator />
