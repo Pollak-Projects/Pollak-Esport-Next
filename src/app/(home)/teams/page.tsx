@@ -50,9 +50,9 @@ const Teams = () => {
   ];
 
   return (
-    <div className="pt-[140px] max-w-[1500px] h-screen mx-auto flex flex-col">
+    <div className="pt-[140px] max-w-[1300px] h-screen mx-auto flex flex-col">
       <div className="w-full border-b-white border-b-2 mb-10">
-        <div className="bg-white max-w-[600px] h-[50px] mb-2 flex rounded-xl">
+        <div className="bg-white max-w-[600px] h-[45px] mb-2 flex rounded-xl">
           <div className="text-black h-full w-[50px] flex justify-center items-center">
             <AiOutlineSearch className="" size={30} />
           </div>
@@ -66,7 +66,7 @@ const Teams = () => {
           />
         </div>
       </div>
-      <div className="flex flex-col gap-10 w-full">
+      <div className="flex flex-col gap-5 w-full">
         {teams
           .filter((team) => team.name.startsWith(inputValue))
           .map((team) => (

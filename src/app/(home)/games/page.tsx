@@ -60,7 +60,7 @@ const Games = () => {
 
   return (
     <>
-      <div className="grid pt-[100px] grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 p-4 mx-auto max-w-[1400px] ">
+      <div className="grid pt-[140px] grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 p-4 mx-auto max-w-[1400px] ">
         {loading
           ? Array.from({ length: 4 }).map((_, i) => (
               <Card

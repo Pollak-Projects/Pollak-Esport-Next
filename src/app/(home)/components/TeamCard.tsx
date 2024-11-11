@@ -5,14 +5,14 @@ import { FaCrown } from "react-icons/fa";
 
 const TeamCard = ({ team }: { team: team }) => {
   return (
-    <div className="w-full bg-black/10 flex max-md:flex-col max-md:gap-10 items-center justify-between border-black/20 border-[3px] backdrop-blur-md py-[20px] h-fit px-20 rounded-2xl shadow-sm shadow-purple-900">
+    <div className="w-full bg-black/10 flex max-md:flex-col max-md:gap-10 items-center justify-between border-black/20 border-[3px] backdrop-blur-md py-[15px] h-fit px-20 rounded-2xl shadow-sm shadow-purple-900">
       <div className="h-full">
         <div className="flex gap-5 items-center h-full">
           <Image
             src={team.image}
             alt="team image"
-            width={125}
-            height={125}
+            width={100}
+            height={100}
             className="rounded-full"
           />
           <div className="text-4xl">
@@ -31,8 +31,8 @@ const TeamCard = ({ team }: { team: team }) => {
                 key={player.name}
                 src={player.image}
                 alt={player.name}
-                width={75}
-                height={75}
+                width={50}
+                height={50}
                 className="rounded-full"
               />
             );
@@ -42,12 +42,12 @@ const TeamCard = ({ team }: { team: team }) => {
                 <Image
                   src={player.image}
                   alt={player.name}
-                  width={75}
-                  height={75}
+                  width={50}
+                  height={50}
                   className="rounded-full border-4 border-yellow-400"
                 />
                 <FaCrown
-                  className="absolute top-[-22px] left-[24px]"
+                  className="absolute top-[-20px] left-[12px]"
                   color="#facc15"
                   size={25}
                 />
