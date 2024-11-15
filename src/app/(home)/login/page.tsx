@@ -104,6 +104,7 @@ const Login = () => {
                   action="/api/auth/callback/credentials"
                   onSubmit={onSubmit}
                   method={"post"}
+                  className="space-y-4"
                 >
                   <div className="grid w-full items-center gap-4">
                     <div className="flex flex-col space-y-1.5">
@@ -126,11 +127,12 @@ const Login = () => {
                         placeholder="************"
                       />
                     </div>
+                    <div className="flex justify-center pt-2">
+                      <Button type="submit">Bejelentkezés</Button>
+                    </div>
                   </div>
-                  <Button type="submit">Bejelentkezés</Button>
                 </form>
               </CardContent>
-              <CardFooter className="flex justify-center"></CardFooter>
             </Card>
           )}
         </TabsContent>
