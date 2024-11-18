@@ -87,7 +87,7 @@ const Settings = () => {
                     <input
                       type="file"
                       id="avatar"
-                      accept="image/*"
+                      accept=".jpg, .jpeg, .png"
                       className="hidden"
                       onChange={(e) => {
                         const file = e.target.files?.[0];
