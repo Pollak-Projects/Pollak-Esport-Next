@@ -11,9 +11,8 @@ import {
 } from "react-brackets";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useParams } from "next/navigation";
-import { Calendar, Home, Inbox, Search, Settings } from "lucide-react";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/app-sidebar";
+import { Calendar, Home, Inbox, Rainbow, Search, Settings } from "lucide-react";
+import Link from "next/link";
 
 // Menu items.
 const items = [
@@ -48,6 +47,25 @@ const BracketsPage = () => {
   const params = useParams<{ tag: string; item: string }>();
   const [loading, setLoading] = useState(true);
   const [rounds, setRounds] = useState<IRoundProps[]>([]);
+
+  const games = [
+    {
+      id: 1,
+      name: "Rainbow",
+    },
+    {
+      id: 2,
+      name: "Game 2",
+    },
+    {
+      id: 3,
+      name: "Game 3",
+    },
+    {
+      id: 4,
+      name: "Game 4",
+    },
+  ];
 
   useEffect(() => {
     // Simulate data fetching
@@ -145,10 +163,14 @@ const BracketsPage = () => {
 
   return (
     <div className="w-full h-full flex pt-[100px] flex-row pl-12 pb-24">
-      <div className="w-fit pr-12">
-        <SidebarProvider>
-          <AppSidebar />
-        </SidebarProvider>
+      <div className="w-64 items-center pt-4 pr-12 h-full border-r-[1px] border-r-border flex flex-col gap-5 text-2xl mr-44">
+        {games.map((game) => {
+          return (
+            <Link href={`/admin/games/${game.id}`} key={game.id}>
+              {game.name}
+            </Link>
+          );
+        })}
       </div>
       {loading ? (
         <Skeleton className="w-full h-96" />

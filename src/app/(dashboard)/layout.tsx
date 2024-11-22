@@ -15,7 +15,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="hu">
-      <body className="antialiased dark">
+      <body className="antialiased dark h-screen">
         <AdminNavbar />
         {children}
         <Toaster />
