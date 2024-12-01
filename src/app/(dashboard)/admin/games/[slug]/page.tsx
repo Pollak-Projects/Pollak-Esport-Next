@@ -320,9 +320,11 @@ const CustomSeed = ({ seed, breakpoint }: IRenderSeedProps) => {
               {getScoreIndicator(1)}
             </div>
           </SeedTeam>
+          <div className="text-[10px] mt-1 text-slate-400 absolute w-full">
+            {chosenTime}
+          </div>
         </div>
       </SeedItem>
-      <div className="text-xs mt-1 text-slate-400">{chosenTime}</div>
     </Seed>
   );
 };

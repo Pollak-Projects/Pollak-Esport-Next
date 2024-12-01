@@ -170,9 +170,11 @@ const CustomSeed = ({ seed, breakpoint }: IRenderSeedProps) => {
             </div>
             <div className="bg-slate-600 h-full py-2 px-2 rounded-ee-xl">0</div>
           </SeedTeam>
+          <div className="text-[10px] mt-1 text-slate-400 absolute w-full">
+            {seed.date}
+          </div>
         </div>
       </SeedItem>
-      <div className="text-xs mt-1 text-slate-400">{seed.date}</div>
     </Seed>
   );
 };
