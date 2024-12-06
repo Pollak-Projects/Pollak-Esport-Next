@@ -11,6 +11,8 @@ import {
 } from "react-brackets";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useParams } from "next/navigation";
+import { team } from "@/app";
+import TeamCard from "../../components/TeamCard";
 const BracketsPage = () => {
   const params = useParams<{ tag: string; item: string }>();
   const [loading, setLoading] = useState(true);
@@ -109,35 +111,91 @@ const BracketsPage = () => {
       setLoading(false);
     }, 1000); // Simulate a 2-second loading time
   }, []);
+  const teams: team[] = [
+    {
+      name: "jaa",
+      image: "https://placehold.co/125x125",
+      competition: "R6 2v2",
+      players: [
+        {
+          name: "Árpi",
+          image: "https://placehold.co/75x75",
+          isTeamLeader: true,
+        },
+        {
+          name: "Feri",
+          image: "https://placehold.co/75x75",
+          isTeamLeader: false,
+        },
+      ],
+    },
+    {
+      name: "das",
+      image: "https://placehold.co/125x125",
+      competition: "R6 2v2",
+      players: [
+        {
+          name: "Dominik",
+          image: "https://placehold.co/75x75",
+          isTeamLeader: true,
+        },
+        {
+          name: "Dániel",
+          image: "https://placehold.co/75x75",
+          isTeamLeader: false,
+        },
+      ],
+    },
+  ];
 
   return (
-    <div className="w-full h-full flex pt-[150px] flex-col px-32">
-      <div className="border-b-[1px] border-b-white/20 w-full text-3xl pb-2">
-        Ranbow Six Seige - 1v1 - 2024.11.1
+    <div className="h-screen flex flex-col">
+      <div className="w-full max-md:w-fit flex pt-[150px] flex-col md:px-32 overflow-x-scroll">
+        <div className="border-b-[1px] whitespace-nowrap w-full border-b-white/20 text-3xl pb-2">
+          Ranbow Six Seige - 1v1 - 2024.11.1
+        </div>
+        {loading ? (
+          <Skeleton className="w-full h-96" />
+        ) : (
+          <Bracket
+            bracketClassName="flex justify-center w-fit pb-10"
+            roundTitleComponent={(
+              title: React.ReactNode,
+              roundIndex: number
+            ) => {
+              return (
+                <div className="text-center bg-slate-900 p-2 border-r-2 border-black mb-14">
+                  {title}
+                </div>
+              );
+            }}
+            rounds={rounds}
+            mobileBreakpoint={0}
+            renderSeedComponent={CustomSeed}
+          />
+        )}
       </div>
-      {loading ? (
-        <Skeleton className="w-full h-96" />
-      ) : (
-        <Bracket
-          bracketClassName="flex justify-center"
-          roundTitleComponent={(title: React.ReactNode, roundIndex: number) => {
-            return (
-              <div className="text-center bg-slate-900 p-2 border-r-2 border-black mb-14">
-                {title}
-              </div>
-            );
-          }}
-          rounds={rounds}
-          renderSeedComponent={CustomSeed}
-        />
-      )}
+      <div className="w-full flex flex-grow bg-black px-20 justify-between">
+        <div className="">
+          <div className="text-5xl">Leírás</div>
+          <div className="text-slate-300">
+            Blaa blaah blahh vmi játlk ebmerekkel és csapatokkal Lorem ipsum,
+            dolor sit amet consectetur adipisicing elit. Iste, qui?
+          </div>
+        </div>
+        <div className="">
+          {teams.map((team) => {
+            return <TeamCard team={team} key={team.name} />;
+          })}
+        </div>
+      </div>
     </div>
   );
 };
 
-const CustomSeed = ({ seed, breakpoint }: IRenderSeedProps) => {
+const CustomSeed = ({ seed }: IRenderSeedProps) => {
   return (
-    <Seed mobileBreakpoint={breakpoint}>
+    <Seed mobileBreakpoint={0}>
       <SeedItem className="!rounded-xl">
         <div className="">
           <SeedTeam className="!py-0 !px-0 h-full">
