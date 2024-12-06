@@ -15,13 +15,13 @@ import logo from "@/tempimg/logo2.png";
 const Settings = () => {
   return (
     <div className="flex justify-center items-center h-screen">
-      <Card className="w-4/12 h-4/5 mt-10">
+      <Card className="w-4/6 h-4/5 mt-10">
         <CardHeader>
           <CardTitle className="text-left text-5xl">Felhasználó</CardTitle>
         </CardHeader>
         <CardContent className="w-full">
           <div className="flex flex-col-reverse w-full">
-            <div className="flex justify-end w-full my-10">
+            <div className="flex justify-end w-full my-7">
               <Button
                 variant={"outline"}
                 className="self-start w-48 border-red-600 !text-red-600"
@@ -31,7 +31,7 @@ const Settings = () => {
             </div>
             <div className="flex-1 pt-4 pl-4 md:pl-10 border border-black rounded-lg bg-slate-900 overflow-y-auto">
               <div className="flex flex-col-reverse md:space-x-16 space-y-4 md:space-y-0">
-                <div className="flex gap-2 mr-10">
+                <div className="flex flex-wrap gap-5 mr-10">
                   <div className="flex flex-col space-y-4 w-full md:w-auto">
                     <Label htmlFor="lastname">Vezetéknév</Label>
                     <Input
@@ -56,8 +56,17 @@ const Settings = () => {
                       defaultValue={"kisjanos88"}
                     />
                   </div>
+                  <div className="flex flex-col space-y-4 w-full md:w-auto">
+                    <Label htmlFor="email">E-mail</Label>
+                    <Input
+                      id="email"
+                      className="w-full max-w-[18rem]"
+                      defaultValue={"kis.janos1988@gmail.com"}
+                      disabled
+                    />
+                  </div>
                 </div>
-                <div className="!ml-0 flex w-ful flex-col !mb-[60px]">
+                <div className="!ml-0 flex w-ful flex-col">
                   <div className="m-auto">
                     <div
                       className="rounded-full cursor-pointer overflow-hidden"
@@ -88,7 +97,7 @@ const Settings = () => {
                   <Label className="mb-4 block text-center">Profilkép</Label>
                 </div>
               </div>
-              <div className="flex justify-end py-5 px-10 space-x-4 w-full mt-8 md:mt-28">
+              <div className="flex justify-end py-5 px-10 space-x-4 w-full mt-8 md:mt-8">
                 <Button variant="outline">Visszaállítás</Button>
                 <Button>Mentés</Button>
               </div>
