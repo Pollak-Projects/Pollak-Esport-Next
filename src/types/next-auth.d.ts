@@ -1,13 +1,40 @@
-import NextAuth, { Account, type DefaultSession, Session } from "next-auth";
+import { type DefaultSession } from "next-auth";
 import { JWT } from "next-auth/jwt";
-import { AdapterSession, AdapterUser } from "@auth/core/adapters";
+import { NextRequest } from "next/server";
 
 declare module "next-auth" {
-    interface Session {
-        session: {} & AdapterSession & DefaultSession;
-        // Do not question it works
+    interface RegisterUser extends User {
+        username?: string | null;
+        email?: string | null;
+        enabled?: boolean | null;
+        firstName?: string | null;
+        lastName?: string | null;
+        credentials?: {
+            type?: string | null;
+            value?: string | null;
+        } | null;
+    }
+
+    interface User {
+        id?: string;
+        name?: string | null;
+        email?: string | null;
+        image?: string | null;
+        roles?: string[] | null;
+        token?: JWT | null;
+    }
+
+    interface Session extends DefaultSession {
+        session: {
+            user: User;
+        };
+        // Do not question, it works
         token?: JWT;
         error?: "RefreshTokenError";
+    }
+
+    interface NextAuthRequest extends NextRequest {
+        auth: Session | null;
     }
 }
 

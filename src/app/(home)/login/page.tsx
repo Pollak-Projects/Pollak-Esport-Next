@@ -16,6 +16,8 @@ import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
 import { signIn } from "next-auth/react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+// import { cookies } from "next/headers";
+
 
 const Login = () => {
   const [loading, setLoading] = useState(true);
@@ -26,7 +28,7 @@ const Login = () => {
   }, []);
 
   // This can ONLY work from the server side
-  const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const onSubmitLogin = async (event: FormEvent<HTMLFormElement>) => {
     setLoading(false);
     event.preventDefault();
 
@@ -47,10 +49,13 @@ const Login = () => {
       return;
     }
 
-    await signIn("credentials", {
+    // const csrfToken = (await cookies()).get("authjs.csrf-token")?.value ?? "";
+
+    await signIn("login", {
       username: formData.get("username"),
       password: formData.get("password"),
       redirect: false,
+      // csrfToken: csrfToken,
     });
     setLoading(false);
 
@@ -66,7 +71,28 @@ const Login = () => {
     });
   };
 
-  const handleRegisterClick = () => {
+  const onSubmitSignup = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const formData = new FormData(event.currentTarget);
+
+    console.log(formData.get("username"));
+
+    await signIn("signup", {
+      user: JSON.stringify({
+        username: formData.get("username"),
+        email: formData.get("email"),
+        enabled: true,
+        firstName: formData.get("fullName"),
+        lastName: formData.get("fullName"),
+        credentials: {
+          type: "password",
+          value: formData.get("password")
+        }
+      }),
+      redirect: true
+    });
+
     toast("Sikeres regisztráció", {
       description: new Date().toLocaleTimeString([], {
         hour: "2-digit",
@@ -101,8 +127,8 @@ const Login = () => {
               </CardHeader>
               <CardContent>
                 <form
-                  action="/api/auth/callback/credentials"
-                  onSubmit={onSubmit}
+                  action="/api/auth/callback/login"
+                  onSubmit={onSubmitLogin}
                   method={"post"}
                   className="space-y-4"
                 >
@@ -146,13 +172,16 @@ const Login = () => {
                 <CardDescription>Fiókot itt tudsz létrehozni.</CardDescription>
               </CardHeader>
               <CardContent>
-                <form>
+                <form
+                    action="/api/auth/callback/signup"
+                    onSubmit={onSubmitSignup}
+                    method={"post"}>
                   <div className="grid w-full items-center gap-4">
-                    {["fullname", "username", "email", "password"].map(
+                    {["fullName", "username", "email", "password"].map(
                       (field) => (
                         <div key={field} className="flex flex-col space-y-1.5">
                           <Label htmlFor={field}>
-                            {field === "fullname"
+                            {field === "fullName"
                               ? "Teljes név"
                               : field === "username"
                               ? "Felhasználónév"
@@ -162,6 +191,7 @@ const Login = () => {
                           </Label>
                           <Input
                             required
+                            name={field}
                             id={field}
                             type={
                               field === "email"
@@ -171,7 +201,7 @@ const Login = () => {
                                 : "text"
                             }
                             placeholder={
-                              field === "fullname"
+                              field === "fullName"
                                 ? "Kis János"
                                 : field === "username"
                                 ? "kisjanos88"
@@ -184,12 +214,13 @@ const Login = () => {
                       )
                     )}
                   </div>
+                  <Button type="submit">
+                    Regisztrálás
+                  </Button>
                 </form>
               </CardContent>
               <CardFooter className="flex justify-center">
-                <Button type="submit" onClick={handleRegisterClick}>
-                  Regisztrálás
-                </Button>
+
               </CardFooter>
             </Card>
           )}
