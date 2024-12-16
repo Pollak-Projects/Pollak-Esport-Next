@@ -13,10 +13,24 @@ import React, { useState, useEffect } from "react";
 import img from "../../../tempimg/r6 card (1v1).png";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
+import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
 
+const showUser = async () => {
+  const res = await fetch(`http://localhost:8181/game`, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  return res.json();
+};
 const Games = () => {
-  const [loading, setLoading] = useState(true);
-  const [hoveredCardId, setHoveredCardId] = useState<number>();
+  const { data, error, isLoading } = useQuery({
+    queryKey: ["user"],
+    queryFn: showUser,
+  });
+
   const games = [
     {
       title: "R6 1v1",
@@ -50,78 +64,67 @@ const Games = () => {
       sub: "subtitle",
     },
   ];
+  if (isLoading) {
+    return (
+      <div className="grid pt-[140px] grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 p-4 mx-auto max-w-[1400px] ">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <Card
+            key={i}
+            className="shadow-md shadow-purple-900 w-[400px] border-b-purple-900 border-b-4 bg-black/20"
+          >
+            <div className="relative w-full h-[130px]">
+              <Skeleton className="w-full h-full" />
+            </div>
+            <CardHeader>
+              <Skeleton className="h-6 w-3/4" />
+            </CardHeader>
+            <CardContent>
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-5/6 mt-2" />
+              <Skeleton className="h-4 w-2/3 mt-2" />
+            </CardContent>
+            <CardFooter className="flex justify-between items-center">
+              <Skeleton className="h-4 w-1/3" />
+              <Skeleton className="h-4 w-1/4" />
+            </CardFooter>
+          </Card>
+        ))}
+      </div>
+    );
+  }
 
-  useEffect(() => {
-    // Simulate loading
-    setTimeout(() => {
-      setLoading(false);
-    }, 2000);
-  }, []);
-
+  console.log(data);
   return (
     <>
       <div className="grid pt-[140px] grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 p-4 mx-auto max-w-[1400px] ">
-        {loading
-          ? Array.from({ length: 4 }).map((_, i) => (
-              <Card
-                key={i}
-                className="shadow-md shadow-purple-900 w-[400px] border-b-purple-900 border-b-4 bg-black/20"
-              >
-                <div className="relative w-full h-[130px]">
-                  <Skeleton className="w-full h-full" />
+        {data.data.map((game: any, i: number) => (
+          <Link key={game.title} href={`/games/${game.id}`}>
+            <Card className="shadow-md shadow-purple-900 border-[0px] w-[400px] hover:scale-105 duration-300 transition-all ease-in-out hover:shadow-2xl  hover:shadow-purple-900 border-b-purple-900 border-b-4 bg-black/[0] backdrop-blur-xl ">
+              <div className="relative w-full h-[130px]">
+                <Image
+                  src={async() =>{
+                    return await import(`../../../tempimg/${game.img}`);
+                  }}
+                  alt={game.title}
+                  fill
+                  className="object-cover rounded-se-lg rounded-ss-lg object-center"
+                />
+              </div>
+              <CardHeader>
+                <CardTitle>{game.title}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p>{game.description}</p>
+              </CardContent>
+              <CardFooter className="flex justify-between items-center">
+                <p>2024.09.01 - 2024.09.10</p>
+                <div className="italic">
+                  További információk <span className=" font-black">{"⭢"}</span>
                 </div>
-                <CardHeader>
-                  <Skeleton className="h-6 w-3/4" />
-                </CardHeader>
-                <CardContent>
-                  <Skeleton className="h-4 w-full" />
-                  <Skeleton className="h-4 w-5/6 mt-2" />
-                  <Skeleton className="h-4 w-2/3 mt-2" />
-                </CardContent>
-                <CardFooter className="flex justify-between items-center">
-                  <Skeleton className="h-4 w-1/3" />
-                  <Skeleton className="h-4 w-1/4" />
-                </CardFooter>
-              </Card>
-            ))
-          : games.map((game, i) => (
-              <Link key={game.title} href={`/games/${i}`}>
-                <Card
-                  className={cn(
-                    "shadow-md shadow-purple-900 border-[0px] w-[400px] hover:scale-105 duration-300 transition-all ease-in-out hover:shadow-2xl  hover:shadow-purple-900 border-b-purple-900 border-b-4 bg-black/[0] backdrop-blur-xl ",
-                    {
-                      "opacity-10":
-                        hoveredCardId != i && hoveredCardId != undefined,
-                    }
-                  )}
-                  onMouseEnter={() => setHoveredCardId(i)}
-                  onMouseLeave={() => setHoveredCardId(undefined)}
-                >
-                  <div className=""></div>
-                  <div className="relative w-full h-[130px]">
-                    <Image
-                      src={game.image}
-                      alt={game.title}
-                      fill
-                      className="object-cover rounded-se-lg rounded-ss-lg object-center"
-                    />
-                  </div>
-                  <CardHeader>
-                    <CardTitle>{game.title}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p>{game.description}</p>
-                  </CardContent>
-                  <CardFooter className="flex justify-between items-center">
-                    <p>2024.09.01 - 2024.09.10</p>
-                    <div className="italic">
-                      További információk{" "}
-                      <span className=" font-black">{"⭢"}</span>
-                    </div>
-                  </CardFooter>
-                </Card>
-              </Link>
-            ))}
+              </CardFooter>
+            </Card>
+          </Link>
+        ))}
       </div>
     </>
   );
