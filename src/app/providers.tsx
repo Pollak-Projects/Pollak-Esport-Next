@@ -1,12 +1,6 @@
 "use client";
 
-import * as React from "react";
-import { useRouter } from "next/navigation";
-import { ThemeProvider as NextThemesProvider } from "next-themes";
-import { ThemeProviderProps } from "next-themes/dist/types";
-import { SessionProvider } from "next-auth/react";
-import { Session } from "next-auth";
-import { auth } from "@/auth";
+import React from "react";
 import {
   QueryClientProvider,
   QueryClient,
@@ -14,17 +8,11 @@ import {
   defaultShouldDehydrateQuery,
 } from "@tanstack/react-query";
 
-export interface ProvidersProps {
-  children: React.ReactNode;
-  Session?: Session;
-}
-
 function makeQueryClient() {
   return new QueryClient({
     defaultOptions: {
       queries: {
-        staleTime: 1000 * 5,
-        refetchInterval: 1000 * 5,
+        staleTime: 60 * 1000,
       },
       dehydrate: {
         shouldDehydrateQuery: (query) =>
@@ -45,15 +33,11 @@ export function getQueryClient() {
     return browserQueryClient;
   }
 }
-
-export function Providers({ children, Session }: ProvidersProps) {
+const Providers = ({ children }: { children: React.ReactNode }) => {
   const queryClient = getQueryClient();
-
   return (
-    <SessionProvider session={Session}>
-      <QueryClientProvider client={queryClient}>
-        <NextThemesProvider>{children}</NextThemesProvider>
-      </QueryClientProvider>
-    </SessionProvider>
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );
-}
+};
+
+export default Providers;

@@ -13,7 +13,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { Plus } from "lucide-react";
-import AddGameModal from "@/components/ui/addGameModal"; // Import the modal component
+import AddGameModal from "@/app/(dashboard)/components/addGameModal"; // Import the modal component
 
 const BracketsPage = () => {
   const params = useParams<{ tag: string; item: string }>();

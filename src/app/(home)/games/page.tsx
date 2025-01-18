@@ -2,22 +2,18 @@
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState, useEffect } from "react";
-import img from "../../../tempimg/r6 card (1v1).png";
+import React from "react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { cn } from "@/lib/utils";
-import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 
-const showUser = async () => {
-  const res = await fetch(`http://localhost:8181/game`, {
+const getGames = async () => {
+  const res = await fetch(`https://esportbackend.gemes.eu/game`, {
     headers: {
       "Content-Type": "application/json",
     },
@@ -27,43 +23,10 @@ const showUser = async () => {
 };
 const Games = () => {
   const { data, error, isLoading } = useQuery({
-    queryKey: ["user"],
-    queryFn: showUser,
+    queryKey: ["games"],
+    queryFn: getGames,
   });
 
-  const games = [
-    {
-      title: "R6 1v1",
-      description:
-        "Azonnali kieséses rendszerben, 3 körig tartó meccs. A játékosok a meccs előtt egyeztetnek a mapról és a karakterekről.",
-      image: img,
-      sub: "subtitle",
-    },
-    {
-      title: "R6 1v4",
-      description:
-        "Azonnali kieséses rendszerben, 3 körig tartó meccs. A játékosok a meccs előtt egyeztetnek a mapról és a karakterekről.",
-      image:
-        "https://i.ytimg.com/vi/drxNwPIosUM/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLCZ9Bt_b9O7-PBI5yVFM3C-tfvSFQ",
-      sub: "subtitle",
-    },
-    {
-      title: "R6 1v2",
-      description:
-        "Azonnali kieséses rendszerben, 3 körig tartó meccs. A játékosok a meccs előtt egyeztetnek a mapról és a karakterekről.",
-      image:
-        "https://i.ytimg.com/vi/drxNwPIosUM/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLCZ9Bt_b9O7-PBI5yVFM3C-tfvSFQ",
-      sub: "subtitle",
-    },
-    {
-      title: "R6 1v5",
-      description:
-        "Azonnali kieséses rendszerben, 3 körig tartó meccs. A játékosok a meccs előtt egyeztetnek a mapról és a karakterekről.",
-      image:
-        "https://i.ytimg.com/vi/drxNwPIosUM/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLCZ9Bt_b9O7-PBI5yVFM3C-tfvSFQ",
-      sub: "subtitle",
-    },
-  ];
   if (isLoading) {
     return (
       <div className="grid pt-[140px] grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 p-4 mx-auto max-w-[1400px] ">
@@ -98,26 +61,26 @@ const Games = () => {
     <>
       <div className="grid pt-[140px] grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 p-4 mx-auto max-w-[1400px] ">
         {data.data.map((game: any, i: number) => (
-          <Link key={game.title} href={`/games/${game.id}`}>
+          <Link key={game.name} href={`/games/${game.id}`}>
             <Card className="shadow-md shadow-purple-900 border-[0px] w-[400px] hover:scale-105 duration-300 transition-all ease-in-out hover:shadow-2xl  hover:shadow-purple-900 border-b-purple-900 border-b-4 bg-black/[0] backdrop-blur-xl ">
               <div className="relative w-full h-[130px]">
-                <Image
-                  src={async() =>{
-                    return await import(`../../../tempimg/${game.img}`);
-                  }}
-                  alt={game.title}
+                {/* <Image
+                  src={game.img}
+                  alt={game.name}
                   fill
                   className="object-cover rounded-se-lg rounded-ss-lg object-center"
-                />
+                /> */}
               </div>
               <CardHeader>
-                <CardTitle>{game.title}</CardTitle>
+                <CardTitle>{game.name}</CardTitle>
               </CardHeader>
               <CardContent>
-                <p>{game.description}</p>
+                <p>{game.description || "nincs leírás"}</p>
               </CardContent>
               <CardFooter className="flex justify-between items-center">
-                <p>2024.09.01 - 2024.09.10</p>
+                <p>
+                  {game.startDate} - {game.endDate}
+                </p>
                 <div className="italic">
                   További információk <span className=" font-black">{"⭢"}</span>
                 </div>

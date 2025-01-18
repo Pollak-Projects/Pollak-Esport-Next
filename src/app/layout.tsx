@@ -1,7 +1,5 @@
-import type { Metadata } from "next";
 import "@/app/globals.css";
-import { Toaster } from "@/components/ui/sonner";
-import { Providers } from "./providers";
+import Providers from "./providers";
 
 export default function RootLayout({
   children,
