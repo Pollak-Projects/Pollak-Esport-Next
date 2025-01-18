@@ -114,7 +114,8 @@ const AddGameModal: React.FC<AddGameModalProps> = ({
 
       // Format dates to YYYY-MM-DD
       const formatDate = (date: Date) => {
-        return date.toISOString().split("T")[0];
+        const adjustedDate = adjustDateForTimezone(date);
+        return adjustedDate.toISOString().split("T")[0];
       };
 
       const response = await fetch(
@@ -169,6 +170,12 @@ const AddGameModal: React.FC<AddGameModalProps> = ({
       return;
     }
     setEndDate(date);
+  };
+
+  // Add this utility function
+  const adjustDateForTimezone = (date: Date): Date => {
+    const timezoneOffset = date.getTimezoneOffset() * 60000;
+    return new Date(date.getTime() + timezoneOffset);
   };
 
   return (
