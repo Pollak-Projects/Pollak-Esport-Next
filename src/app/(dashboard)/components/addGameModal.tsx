@@ -174,8 +174,7 @@ const AddGameModal: React.FC<AddGameModalProps> = ({
 
   // Add this utility function
   const adjustDateForTimezone = (date: Date): Date => {
-    const timezoneOffset = date.getTimezoneOffset() * 60000;
-    return new Date(date.getTime() + timezoneOffset);
+    return new Date(date.getTime() + 1);
   };
 
   return (
