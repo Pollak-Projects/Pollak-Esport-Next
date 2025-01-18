@@ -21,7 +21,6 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { v4 as uuidv4 } from "uuid";
-import { supabase } from "@/lib/supabase";
 
 interface AddGameModalProps {
   children: React.ReactNode;
@@ -43,43 +42,25 @@ const AddGameModal: React.FC<AddGameModalProps> = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const uploadImage = async (file: File): Promise<string> => {
-    if (!file) throw new Error("Nincs kiválasztott fájl");
-    
-    // Fájl méret ellenőrzés (max 5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      throw new Error("A fájl mérete nem lehet nagyobb mint 5MB");
-    }
-
-    const fileExt = file.name.split(".").pop()?.toLowerCase();
-    // Fájl kiterjesztés ellenőrzés
-    if (!["jpg", "jpeg", "png", "gif"].includes(fileExt || "")) {
-      throw new Error("Csak jpg, jpeg, png vagy gif fájlok engedélyezettek");
-    }
-
-    const fileName = `gamepic/${uuidv4()}.${fileExt}`;
+    const fileExt = file.name.split(".").pop();
+    const fileName = `${uuidv4()}.${fileExt}`;
+    const uploadUrl = `${process.env.NEXT_PUBLIC_STORAGE_URL}/gamepic/${fileName}`;
 
     try {
-      const { error: uploadError } = await supabase.storage
-        .from("images")
-        .upload(fileName, file, {
-          cacheControl: "3600",
-          upsert: false,
-        });
+      const response = await fetch(uploadUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": `image/${fileExt}`,
+          Authorization: `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`,
+        },
+        body: file,
+      });
 
-      if (uploadError) throw uploadError;
+      if (!response.ok) throw new Error("Kép feltöltése sikertelen");
 
-      const { data } = await supabase.storage
-        .from("images")
-        .createSignedUrl(fileName, 31536000); // 1 éves link
-
-      if (!data?.signedUrl) {
-        throw new Error("Nem sikerült létrehozni a kép URL-jét");
-      }
-
-      return data.signedUrl;
-    } catch (error: any) {
-      console.error("Upload error:", error);
-      throw new Error(`Kép feltöltése sikertelen: ${error.message || 'Ismeretlen hiba történt'}`);
+      return uploadUrl;
+    } catch (error) {
+      throw new Error("Kép feltöltése sikertelen: " + (error as Error).message);
     }
   };
 
@@ -98,11 +79,10 @@ const AddGameModal: React.FC<AddGameModalProps> = ({
 
     setIsSubmitting(true);
     try {
-      let imageUrl = '';
-      if (selectedFile) {
-        imageUrl = await uploadImage(selectedFile);
-      }
+      // Upload image first
+      const imageUrl = await uploadImage(selectedFile);
 
+      // Then create game with the image URL
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/game/`,
         {
@@ -121,16 +101,11 @@ const AddGameModal: React.FC<AddGameModalProps> = ({
         }
       );
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Hiba történt a feltöltés során");
-      }
+      if (!response.ok) throw new Error("Hiba történt a feltöltés során");
 
       toast.success("Játék sikeresen hozzáadva!");
       onSuccess();
-      onClose();
     } catch (error) {
-      console.error("Error:", error);
       toast.error("Hiba történt: " + (error as Error).message);
     } finally {
       setIsSubmitting(false);
@@ -155,7 +130,7 @@ const AddGameModal: React.FC<AddGameModalProps> = ({
           <CardDescription>Játékot itt tudsz hozzáadni.</CardDescription>
         </CardHeader>
         <CardContent>
-          <form id="addGameForm" onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit}>
             <div className="grid w-full items-center gap-4">
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="name">Játék neve</Label>
@@ -260,11 +235,7 @@ const AddGameModal: React.FC<AddGameModalProps> = ({
           <Button variant="outline" onClick={onClose}>
             Mégse
           </Button>
-          <Button 
-            type="submit" 
-            form="addGameForm"
-            disabled={isSubmitting}
-          >
+          <Button type="submit" onClick={handleSubmit} disabled={isSubmitting}>
             {isSubmitting ? "Feltöltés..." : "Hozzáadás"}
           </Button>
         </CardFooter>
