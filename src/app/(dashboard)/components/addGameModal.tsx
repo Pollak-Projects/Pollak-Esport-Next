@@ -81,10 +81,11 @@ const AddGameModal: React.FC<AddGameModalProps> = ({
 
     setIsSubmitting(true);
     try {
-      // Upload image first
-      const imageUrl = await uploadImage(selectedFile);
+      let imageUrl = '';
+      if (selectedFile) {
+        imageUrl = await uploadImage(selectedFile);
+      }
 
-      // Then create game with the image URL
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/game/`,
         {
@@ -103,11 +104,16 @@ const AddGameModal: React.FC<AddGameModalProps> = ({
         }
       );
 
-      if (!response.ok) throw new Error("Hiba történt a feltöltés során");
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Hiba történt a feltöltés során");
+      }
 
       toast.success("Játék sikeresen hozzáadva!");
       onSuccess();
+      onClose();
     } catch (error) {
+      console.error("Error:", error);
       toast.error("Hiba történt: " + (error as Error).message);
     } finally {
       setIsSubmitting(false);
@@ -132,7 +138,7 @@ const AddGameModal: React.FC<AddGameModalProps> = ({
           <CardDescription>Játékot itt tudsz hozzáadni.</CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit}>
+          <form id="addGameForm" onSubmit={handleSubmit}>
             <div className="grid w-full items-center gap-4">
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="name">Játék neve</Label>
@@ -237,7 +243,11 @@ const AddGameModal: React.FC<AddGameModalProps> = ({
           <Button variant="outline" onClick={onClose}>
             Mégse
           </Button>
-          <Button type="submit" onClick={handleSubmit} disabled={isSubmitting}>
+          <Button 
+            type="submit" 
+            form="addGameForm"
+            disabled={isSubmitting}
+          >
             {isSubmitting ? "Feltöltés..." : "Hozzáadás"}
           </Button>
         </CardFooter>
