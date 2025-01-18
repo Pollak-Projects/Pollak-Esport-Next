@@ -63,12 +63,12 @@ const Games = () => {
           <Link key={game.name} href={`/games/${game.id}`}>
             <Card className="shadow-md shadow-purple-900 border-[0px] w-[400px] hover:scale-105 duration-300 transition-all ease-in-out hover:shadow-2xl  hover:shadow-purple-900 border-b-purple-900 border-b-4 bg-black/[0] backdrop-blur-xl ">
               <div className="relative w-full h-[130px]">
-                {/* <Image
-                  src={game.img}
+                <Image
+                  src={game.image}
                   alt={game.name}
                   fill
                   className="object-cover rounded-se-lg rounded-ss-lg object-center"
-                /> */}
+                />
               </div>
               <CardHeader>
                 <CardTitle>{game.name}</CardTitle>
@@ -78,7 +78,15 @@ const Games = () => {
               </CardContent>
               <CardFooter className="flex justify-between items-center">
                 <p>
-                  {game.startDate} - {game.endDate}
+                  {game.startDate
+                    .split("T")[0]
+                    .replace("-", ".")
+                    .replace("-", ".")}{" "}
+                  -{" "}
+                  {game.endDate
+                    .split("T")[0]
+                    .replace("-", ".")
+                    .replace("-", ".")}
                 </p>
                 <div className="italic">
                   További információk <span className=" font-black">{"⭢"}</span>

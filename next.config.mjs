@@ -10,6 +10,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "placehold.co",
       },
+      {
+        protocol: "https",
+        hostname: "supaesport.gemes.eu",
+      },
     ],
     dangerouslyAllowSVG: true,
   },

@@ -15,13 +15,13 @@ export default function RootLayout({
 }>) {
   return (
     <>
-        <Script
-          src="https://umami.gemes.eu/script.js"
-          data-website-id="923394af-d972-4518-85e7-6ded41da33a9"
-          defer
-        />
-        <NavbarForLoggedIn />
-        {children}
+      <Script
+        src="https://umami.gemes.eu/script.js"
+        data-website-id="923394af-d972-4518-85e7-6ded41da33a9"
+        defer
+      />
+      <NavbarForLoggedIn />
+      {children}
     </>
   );
 }
