@@ -111,12 +111,13 @@ const AddGameModal: React.FC<AddGameModalProps> = ({
 
       setIsSubmitting(true);
       const imageUrl = await uploadImage(selectedFile);
-
-      // Format dates to YYYY-MM-DD
-      const formatDate = (date: Date) => {
-        const adjustedDate = adjustDateForTimezone(date);
-        return adjustedDate.toISOString().split("T")[0];
-      };
+      
+  // Összevont dátumkezelő függvény
+  const formatDate = (date: Date) => {
+    const newDate = new Date(date);
+    newDate.setDate(newDate.getDate() + 1);
+    return newDate.toISOString().split("T")[0];
+  };
 
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/game/`,
@@ -170,11 +171,6 @@ const AddGameModal: React.FC<AddGameModalProps> = ({
       return;
     }
     setEndDate(date);
-  };
-
-  // Add this utility function
-  const adjustDateForTimezone = (date: Date): Date => {
-    return new Date(date.getTime() + 1);
   };
 
   return (
