@@ -43,26 +43,43 @@ const AddGameModal: React.FC<AddGameModalProps> = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const uploadImage = async (file: File): Promise<string> => {
-    const fileExt = file.name.split(".").pop();
+    if (!file) throw new Error("Nincs kiválasztott fájl");
+    
+    // Fájl méret ellenőrzés (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      throw new Error("A fájl mérete nem lehet nagyobb mint 5MB");
+    }
+
+    const fileExt = file.name.split(".").pop()?.toLowerCase();
+    // Fájl kiterjesztés ellenőrzés
+    if (!["jpg", "jpeg", "png", "gif"].includes(fileExt || "")) {
+      throw new Error("Csak jpg, jpeg, png vagy gif fájlok engedélyezettek");
+    }
+
     const fileName = `gamepic/${uuidv4()}.${fileExt}`;
 
     try {
-      const { data, error } = await supabase.storage
+      const { error: uploadError } = await supabase.storage
         .from("images")
         .upload(fileName, file, {
           cacheControl: "3600",
           upsert: false,
         });
 
-      if (error) throw error;
+      if (uploadError) throw uploadError;
 
-      const {
-        data: { publicUrl },
-      } = supabase.storage.from("images").getPublicUrl(data.path);
+      const { data } = await supabase.storage
+        .from("images")
+        .createSignedUrl(fileName, 31536000); // 1 éves link
 
-      return publicUrl;
-    } catch (error) {
-      throw new Error("Kép feltöltése sikertelen: " + (error as Error).message);
+      if (!data?.signedUrl) {
+        throw new Error("Nem sikerült létrehozni a kép URL-jét");
+      }
+
+      return data.signedUrl;
+    } catch (error: any) {
+      console.error("Upload error:", error);
+      throw new Error(`Kép feltöltése sikertelen: ${error.message || 'Ismeretlen hiba történt'}`);
     }
   };
 
