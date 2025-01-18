@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import { hu } from "date-fns/locale";
 import {
   Card,
   CardContent,
@@ -236,6 +237,8 @@ const AddGameModal: React.FC<AddGameModalProps> = ({
                       mode="single"
                       selected={startDate}
                       onSelect={setStartDate}
+                      weekStartsOn={1}
+                      locale={hu}
                     />
                   </PopoverContent>
                 </Popover>
@@ -262,6 +265,8 @@ const AddGameModal: React.FC<AddGameModalProps> = ({
                       disabled={(date) =>
                         startDate ? date < startDate : false
                       }
+                      weekStartsOn={1}
+                      locale={hu}
                     />
                   </PopoverContent>
                 </Popover>
