@@ -111,6 +111,11 @@ const AddGameModal: React.FC<AddGameModalProps> = ({
       setIsSubmitting(true);
       const imageUrl = await uploadImage(selectedFile);
 
+      // Format dates to YYYY-MM-DD
+      const formatDate = (date: Date) => {
+        return date.toISOString().split("T")[0];
+      };
+
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/game/`,
         {
@@ -122,8 +127,8 @@ const AddGameModal: React.FC<AddGameModalProps> = ({
             name,
             image: imageUrl,
             playerPerTeam,
-            startDate: startDate.toISOString(),
-            endDate: endDate.toISOString(),
+            startDate: formatDate(startDate),
+            endDate: formatDate(endDate),
             description,
           }),
         }
