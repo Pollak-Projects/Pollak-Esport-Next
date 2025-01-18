@@ -56,11 +56,25 @@ const AddGameModal: React.FC<AddGameModalProps> = ({
         body: file,
       });
 
-      if (!response.ok) throw new Error("Kép feltöltése sikertelen");
+      if (!response.ok) {
+        const errorData = await response.text();
+        console.error("Image upload failed:", {
+          status: response.status,
+          statusText: response.statusText,
+          errorData,
+        });
+        throw new Error(
+          `Kép feltöltése sikertelen (${response.status}): ${response.statusText}`
+        );
+      }
 
       return uploadUrl;
     } catch (error) {
-      throw new Error("Kép feltöltése sikertelen: " + (error as Error).message);
+      console.error("Image upload error:", error);
+      if (error instanceof Error) {
+        throw new Error(`Kép feltöltése sikertelen: ${error.message}`);
+      }
+      throw new Error("Ismeretlen hiba történt a kép feltöltése során");
     }
   };
 
@@ -72,17 +86,31 @@ const AddGameModal: React.FC<AddGameModalProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name || !playerPerTeam || !startDate || !endDate || !selectedFile) {
-      toast.error("Kérlek tölts ki minden mezőt!");
-      return;
-    }
 
-    setIsSubmitting(true);
     try {
-      // Upload image first
+      if (
+        !name ||
+        !description ||
+        !playerPerTeam ||
+        !startDate ||
+        !endDate ||
+        !selectedFile
+      ) {
+        const missingFields = [
+          !name && "név",
+          !playerPerTeam && "játékosok száma",
+          !startDate && "kezdési dátum",
+          !endDate && "befejezési dátum",
+          !selectedFile && "kép",
+        ]
+          .filter(Boolean)
+          .join(", ");
+        throw new Error(`Hiányzó mezők: ${missingFields}`);
+      }
+
+      setIsSubmitting(true);
       const imageUrl = await uploadImage(selectedFile);
 
-      // Then create game with the image URL
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/game/`,
         {
@@ -101,12 +129,27 @@ const AddGameModal: React.FC<AddGameModalProps> = ({
         }
       );
 
-      if (!response.ok) throw new Error("Hiba történt a feltöltés során");
+      if (!response.ok) {
+        const errorData = await response.text();
+        console.error("Game creation failed:", {
+          status: response.status,
+          statusText: response.statusText,
+          errorData,
+        });
+        throw new Error(
+          `Játék létrehozása sikertelen (${response.status}): ${response.statusText}`
+        );
+      }
 
       toast.success("Játék sikeresen hozzáadva!");
       onSuccess();
     } catch (error) {
-      toast.error("Hiba történt: " + (error as Error).message);
+      console.error("Form submission error:", error);
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("Ismeretlen hiba történt");
+      }
     } finally {
       setIsSubmitting(false);
     }
