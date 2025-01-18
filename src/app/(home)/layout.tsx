@@ -17,7 +17,7 @@ export default function RootLayout({
     <>
       <Script
         src="https://umami.gemes.eu/script.js"
-        data-website-id="923394af-d972-4518-85e7-6ded41da33a9"
+        data-website-id="7387da7d-ce22-48c2-b9e0-8eba469d4262"
         defer
       />
       <NavbarForLoggedIn />
