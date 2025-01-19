@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Script from "next/script";
-import Navbar from "@/components/NavbarManager";
 
 export const metadata: Metadata = {
   title: "Pollák ESport",
@@ -19,7 +18,6 @@ export default function RootLayout({
         data-website-id="7387da7d-ce22-48c2-b9e0-8eba469d4262"
         defer
       />
-      <Navbar />
       {children}
     </>
   );

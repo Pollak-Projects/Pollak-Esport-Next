@@ -1,7 +1,7 @@
 import "@/app/globals.css";
 import Providers from "./providers";
 import { AuthProvider } from "@/components/providers/AuthProvider";
-import NavbarManager from "@/components/NavbarManager";
+import Navbar from "@/components/Navbar";
 
 export default function RootLayout({
   children,
@@ -13,7 +13,7 @@ export default function RootLayout({
       <body className="antialiased dark min-h-screen w-full bg-gradient-to-t from-purple-950/90 from-[3.6%] to-[90.4%] to-background">
         <AuthProvider>
           <Providers>
-            <NavbarManager />
+            <Navbar />
             {children}
           </Providers>
         </AuthProvider>
