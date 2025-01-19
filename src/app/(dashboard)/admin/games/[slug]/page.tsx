@@ -245,10 +245,11 @@ const CustomSeed = ({ seed }: IRenderSeedProps) => {
               <select
                 value={team1Score}
                 onChange={(e) => handleScoreChange(0, parseInt(e.target.value))}
-                className="px-2 py-1 bg-transparent text-white rounded border border-gray-600 w-12"
+                className="px-2 py-1 bg-slate-800 text-white rounded border border-gray-600 w-12"
+                style={{ color: 'white', backgroundColor: '#1e293b' }}
               >
                 {[0, 1, 2, 3, 4, 5].map((score) => (
-                  <option key={score} value={score}>
+                  <option key={score} value={score} style={{ backgroundColor: '#1e293b' }}>
                     {score}
                   </option>
                 ))}
@@ -263,10 +264,11 @@ const CustomSeed = ({ seed }: IRenderSeedProps) => {
               <select
                 value={team1Name}
                 onChange={(e) => handleNameChange(0, e.target.value)}
-                className="truncate bg-transparent text-white border border-gray-600 rounded px-2 py-1"
+                className="truncate bg-slate-800 text-white border border-gray-600 rounded px-2 py-1"
+                style={{ color: 'white', backgroundColor: '#1e293b' }}
               >
                 {teamOptions.map((team) => (
-                  <option key={team} value={team}>
+                  <option key={team} value={team} style={{ backgroundColor: '#1e293b' }}>
                     {team}
                   </option>
                 ))}
@@ -285,10 +287,11 @@ const CustomSeed = ({ seed }: IRenderSeedProps) => {
               <select
                 value={team2Score}
                 onChange={(e) => handleScoreChange(1, parseInt(e.target.value))}
-                className="px-2 py-1 bg-transparent text-white rounded border border-gray-600 w-12"
+                className="px-2 py-1 bg-slate-800 text-white rounded border border-gray-600 w-12"
+                style={{ color: 'white', backgroundColor: '#1e293b' }}
               >
                 {[0, 1, 2, 3, 4, 5].map((score) => (
-                  <option key={score} value={score}>
+                  <option key={score} value={score} style={{ backgroundColor: '#1e293b' }}>
                     {score}
                   </option>
                 ))}
@@ -303,10 +306,11 @@ const CustomSeed = ({ seed }: IRenderSeedProps) => {
               <select
                 value={team2Name}
                 onChange={(e) => handleNameChange(1, e.target.value)}
-                className="truncate bg-transparent text-white border border-gray-600 rounded px-2 py-1"
+                className="truncate bg-slate-800 text-white border border-gray-600 rounded px-2 py-1"
+                style={{ color: 'white', backgroundColor: '#1e293b' }}
               >
                 {teamOptions.map((team) => (
-                  <option key={team} value={team}>
+                  <option key={team} value={team} style={{ backgroundColor: '#1e293b' }}>
                     {team}
                   </option>
                 ))}
