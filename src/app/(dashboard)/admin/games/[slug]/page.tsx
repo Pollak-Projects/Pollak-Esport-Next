@@ -1,6 +1,8 @@
 "use client";
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { Circle } from "lucide-react";
 import {
   Bracket,
   IRoundProps,
@@ -12,19 +14,33 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import { Plus } from "lucide-react";
-import AddGameModal from "@/app/(dashboard)/components/addGameModal"; // Import the modal component
+import { Plus, Save, Pencil, Trash2 } from "lucide-react";
+import AddGameModal from "@/app/(dashboard)/components/addGameModal";
 
 const BracketsPage = () => {
-  const params = useParams<{ tag: string; item: string }>();
-  const [loading, setLoading] = useState(true);
-  const [rounds, setRounds] = useState<IRoundProps[]>([]);
-  const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
+  const params = useParams<{ slug: string }>();
+  const currentId = params.slug;
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [games, setGames] = useState<Array<{ id: number; name: string }>>([]);
   const [gamesLoading, setGamesLoading] = useState(true);
 
+  const { data, error, isLoading } = useQuery({
+    queryKey: ["games", currentId],
+    queryFn: async () => {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/game/${currentId}`
+      );
+      return res.json();
+    },
+  });
+
   const handleModalToggle = () => {
     setIsModalOpen(!isModalOpen);
+  };
+
+  const handleSave = async () => {
+    // TODO: Implement save functionality
+    console.log("Saving bracket changes...");
   };
 
   useEffect(() => {
@@ -59,110 +75,21 @@ const BracketsPage = () => {
     fetchGames();
   }, []);
 
-  useEffect(() => {
-    // Simulate data fetching
-    setTimeout(() => {
-      setRounds([
-        {
-          title: "Negyeddöntő",
-          seeds: [
-            {
-              id: 1,
-              date: new Date(2024, 11, 20, 3, 0, 0).toLocaleString("hu-HU", {
-                hour12: false,
-              }),
-              teams: [
-                { name: "Team B", score: 3 },
-                { name: "Team V", score: 1 },
-              ],
-            },
-            {
-              id: 3,
-              date: new Date(2024, 11, 20, 3, 0, 0).toLocaleString("hu-HU", {
-                hour12: false,
-              }),
-              teams: [
-                { name: "Team A", score: 3 },
-                { name: "Team F", score: 1 },
-              ],
-            },
-            {
-              id: 2,
-              date: new Date(2024, 11, 20, 3, 0, 0).toLocaleString("hu-HU", {
-                hour12: false,
-              }),
-              teams: [
-                { name: "Team C", score: 3 },
-                { name: "Team G", score: 1 },
-              ],
-            },
-            {
-              id: 4,
-              date: new Date(2024, 11, 20, 3, 0, 0).toLocaleString("hu-HU", {
-                hour12: false,
-              }),
-              teams: [
-                { name: "Team D", score: 3 },
-                { name: "Team E", score: 1 },
-              ],
-            },
-          ],
-        },
-        {
-          title: "Elődöntő",
-          seeds: [
-            {
-              id: 1,
-              date: new Date(2024, 11, 20, 3, 0, 0).toLocaleString("hu-HU", {
-                hour12: false,
-              }),
-              teams: [
-                { name: "Team A", score: 3 },
-                { name: "Team B", score: 1 },
-              ],
-            },
-            {
-              id: 2,
-              date: new Date(2024, 11, 20, 3, 0, 0).toLocaleString("hu-HU", {
-                hour12: false,
-              }),
-              teams: [
-                { name: "Team C", score: 3 },
-                { name: "Team D", score: 1 },
-              ],
-            },
-          ],
-        },
-        {
-          title: "Döntő",
-          seeds: [
-            {
-              id: 3,
-              date: new Date(2024, 11, 20, 3, 0, 0).toLocaleString("hu-HU", {
-                hour12: false,
-              }),
-              teams: [
-                { name: "Team A", score: 3 },
-                { name: "Team C", score: 1 },
-              ],
-            },
-          ],
-        },
-      ]);
-      setLoading(false);
-    }, 1000); // Simulate a 2-second loading time
-  }, []);
+  if (isLoading) {
+    return <Skeleton className="w-full h-96" />;
+  }
+
+  const rounds: IRoundProps[] = [];
+  data.data[0].bracket
+    .replaceAll(`\\`, "")
+    .split(";")
+    .map((round: string) => {
+      rounds.push(JSON.parse(round));
+    });
 
   return (
     <div className="w-full h-full flex pt-[100px] flex-row pl-12 pb-24">
-      <div className="relative w-64 items-center pt-4 pr-12 h-full border-r-[1px] border-r-border flex flex-col gap-5 text-2xl mr-44 justify-center">
-        <Link
-          href="#"
-          onClick={handleModalToggle} // Toggle modal on click
-          className="absolute bottom-0 right-0 mb-4 mr-4 w-16 h-16 bg-purple-500 rounded-full flex items-center justify-center"
-        >
-          <Plus />
-        </Link>
+      <div className="fixed left-12 top-[100px] bottom-0 w-64 items-center pt-4 pr-12 border-r-[1px] border-r-border flex flex-col gap-5 text-2xl">
         {gamesLoading ? (
           <Skeleton className="w-full h-20" />
         ) : games.length > 0 ? (
@@ -179,22 +106,80 @@ const BracketsPage = () => {
           <div className="text-gray-500">No games available</div>
         )}
       </div>
-      {loading ? (
-        <Skeleton className="w-full h-96" />
-      ) : (
+      <div className="w-full flex flex-col relative ml-64">
+        <div className="border-b-[1px] whitespace-nowrap w-full border-b-white/20 text-3xl flex justify-between items-center mb-8">
+          <div className="flex gap-10 items-center">
+            <div className="flex justify-start gap-2 items-center bg-slate-900 py-2 px-5">
+              <Circle
+                fill={
+                  data.data[0].status === "Hamarosan"
+                    ? "gray"
+                    : data.data[0].status === "Vége"
+                    ? "red"
+                    : "green"
+                }
+                size={15}
+                color={
+                  data.data[0].status === "Hamarosan"
+                    ? "gray"
+                    : data.data[0].status === "Vége"
+                    ? "red"
+                    : "green"
+                }
+              />
+              {data.data[0].status}
+            </div>
+            <div>
+              {data.data[0].name +
+                " - " +
+                data.data[0].playerPerTeam +
+                "v" +
+                data.data[0].playerPerTeam}
+            </div>
+          </div>
+          <div>
+            {data.data[0].startDate.split("T")[0].replaceAll("-", ".") +
+              " - " +
+              data.data[0].endDate.split("T")[0].replaceAll("-", ".")}
+          </div>
+        </div>
         <Bracket
           bracketClassName="flex"
-          roundTitleComponent={(title: React.ReactNode, roundIndex: number) => {
-            return (
-              <div className="text-center bg-slate-900 p-2 border-r-2 border-black mb-14">
-                {title}
-              </div>
-            );
-          }}
+          roundTitleComponent={(title: React.ReactNode) => (
+            <div className="text-center bg-slate-900 p-2 border-r-2 border-black mb-14">
+              {title}
+            </div>
+          )}
           rounds={rounds}
           renderSeedComponent={CustomSeed}
         />
-      )}
+        <div className="fixed right-8 bottom-8 flex gap-4">
+          <button
+            onClick={handleModalToggle}
+            className="w-16 h-16 bg-purple-500 rounded-full flex items-center justify-center hover:bg-purple-600 transition-colors"
+          >
+            <Plus />
+          </button>
+          <button
+            onClick={() => console.log("Edit clicked")}
+            className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors"
+          >
+            <Pencil />
+          </button>
+          <button
+            onClick={handleSave}
+            className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center hover:bg-green-700 transition-colors"
+          >
+            <Save />
+          </button>
+          <button
+            onClick={() => console.log("Delete clicked")}
+            className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center hover:bg-red-700 transition-colors"
+          >
+            <Trash2 />
+          </button>
+        </div>
+      </div>
       {isModalOpen && (
         <AddGameModal onClose={handleModalToggle} onSuccess={handleModalToggle}>
           <div className="p-4">{/* Modal content goes here */}</div>
@@ -204,12 +189,9 @@ const BracketsPage = () => {
   );
 };
 
-const CustomSeed = ({ seed, breakpoint }: IRenderSeedProps) => {
+const CustomSeed = ({ seed }: IRenderSeedProps) => {
   const [team1Score, setTeam1Score] = useState(seed.teams[0]?.score || 0);
   const [team2Score, setTeam2Score] = useState(seed.teams[1]?.score || 0);
-  const [chosenTime, setChosenTime] = useState(
-    new Date().toLocaleString("hu-HU", { hour12: false })
-  );
   const [team1Name, setTeam1Name] = useState(seed.teams[0]?.name || "NO TEAM");
   const [team2Name, setTeam2Name] = useState(seed.teams[1]?.name || "NO TEAM");
 
@@ -219,7 +201,6 @@ const CustomSeed = ({ seed, breakpoint }: IRenderSeedProps) => {
     } else {
       setTeam2Score(score);
     }
-    setChosenTime(new Date().toLocaleString("hu-HU", { hour12: false }));
   };
 
   const handleNameChange = (teamIndex: number, name: string) => {
@@ -256,9 +237,9 @@ const CustomSeed = ({ seed, breakpoint }: IRenderSeedProps) => {
   };
 
   return (
-    <Seed mobileBreakpoint={breakpoint}>
+    <Seed mobileBreakpoint={0}>
       <SeedItem className="!rounded-xl">
-        <div className="">
+        <div>
           <SeedTeam className="!py-0 !px-0 h-full">
             <div className="flex flex-shrink-0 gap-2 items-center">
               <select
@@ -340,7 +321,7 @@ const CustomSeed = ({ seed, breakpoint }: IRenderSeedProps) => {
             </div>
           </SeedTeam>
           <div className="text-[10px] mt-1 text-slate-400 absolute w-full">
-            {chosenTime}
+            {seed.date}
           </div>
         </div>
       </SeedItem>
