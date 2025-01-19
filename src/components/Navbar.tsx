@@ -34,6 +34,7 @@ import {
 import { useAuth } from "@/hooks/useAuth";
 import { signOut } from "next-auth/react";
 import { toast } from "sonner";
+import { AdminCheck, UserCheck } from "@/lib/PermissionCheck";
 
 const Links = [
   { title: "Kezdőlap", link: "/" },
@@ -42,7 +43,7 @@ const Links = [
 ];
 
 export default function Navbar() {
-  const { user, isAuthenticated, isAdmin } = useAuth();
+  const { user } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
   const pathname = usePathname();
 
@@ -118,51 +119,54 @@ export default function Navbar() {
   );
 
   const renderAuthContent = () => {
-    if (isLoading)
+    if (isLoading) {
       return <Skeleton className="w-[50px] h-[50px] rounded-full" />;
+    }
 
-    if (isAuthenticated) {
+    if (user) {
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger className="rounded-full p-0">
-            {user?.image ? (
-              <Image
-                width={50}
-                height={50}
-                src={user.image}
-                alt="profile"
-                className="rounded-full"
-                priority
-              />
-            ) : (
-              <div className="w-[50px] h-[50px] rounded-full bg-primary flex items-center justify-center">
-                {user?.name?.charAt(0) || "U"}
-              </div>
-            )}
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuLabel>{user?.name || "Felhasználó"}</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <Link href="/profile">
-              <DropdownMenuItem>
-                <User />
-                Fiókom
-              </DropdownMenuItem>
-            </Link>
-            <Link href="/myteam">
-              <DropdownMenuItem>
-                <Users />
-                Csapatom
-              </DropdownMenuItem>
-            </Link>
-            <Link href="/games/0">
-              <DropdownMenuItem>
-                <Gamepad2 />
-                Versenyeim
-              </DropdownMenuItem>
-            </Link>
-            {isAdmin && (
-              <>
+        <UserCheck>
+          <DropdownMenu>
+            <DropdownMenuTrigger className="rounded-full p-0">
+              {user?.image ? (
+                <Image
+                  width={50}
+                  height={50}
+                  src={user.image}
+                  alt="profile"
+                  className="rounded-full"
+                  priority
+                />
+              ) : (
+                <div className="w-[50px] h-[50px] rounded-full bg-primary flex items-center justify-center">
+                  {user?.name?.charAt(0) || "U"}
+                </div>
+              )}
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuLabel>
+                {user?.name || "Felhasználó"}
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <Link href="/profile">
+                <DropdownMenuItem>
+                  <User />
+                  Fiókom
+                </DropdownMenuItem>
+              </Link>
+              <Link href="/myteam">
+                <DropdownMenuItem>
+                  <Users />
+                  Csapatom
+                </DropdownMenuItem>
+              </Link>
+              <Link href="/games/0">
+                <DropdownMenuItem>
+                  <Gamepad2 />
+                  Versenyeim
+                </DropdownMenuItem>
+              </Link>
+              <AdminCheck>
                 <DropdownMenuSeparator />
                 <DropdownMenuLabel className="font-bold">
                   Admin
@@ -173,28 +177,28 @@ export default function Navbar() {
                     Felhasználók kezelése
                   </DropdownMenuItem>
                 </Link>
-                <Link href="/admin/tournaments">
+                <Link href="/admin/games/0">
                   <DropdownMenuItem>
                     <Gamepad2 className="mr-2" />
                     Versenyek kezelése
                   </DropdownMenuItem>
                 </Link>
-              </>
-            )}
-            <DropdownMenuSeparator />
-            <Link href="/settings">
-              <DropdownMenuItem>
-                <Settings />
-                Beállítások
+              </AdminCheck>
+              <DropdownMenuSeparator />
+              <Link href="/settings">
+                <DropdownMenuItem>
+                  <Settings />
+                  Beállítások
+                </DropdownMenuItem>
+              </Link>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={handleLogout}>
+                <LogOut />
+                Kijelentkezés
               </DropdownMenuItem>
-            </Link>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleLogout}>
-              <LogOut />
-              Kijelentkezés
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </UserCheck>
       );
     }
 
