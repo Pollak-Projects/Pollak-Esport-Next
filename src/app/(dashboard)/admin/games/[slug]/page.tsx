@@ -20,29 +20,44 @@ const BracketsPage = () => {
   const [loading, setLoading] = useState(true);
   const [rounds, setRounds] = useState<IRoundProps[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
+  const [games, setGames] = useState<Array<{ id: number; name: string }>>([]);
+  const [gamesLoading, setGamesLoading] = useState(true);
 
   const handleModalToggle = () => {
     setIsModalOpen(!isModalOpen);
   };
 
-  const games = [
-    {
-      id: 1,
-      name: "Rainbow",
-    },
-    {
-      id: 2,
-      name: "Game 2",
-    },
-    {
-      id: 3,
-      name: "Game 3",
-    },
-    {
-      id: 4,
-      name: "Game 4",
-    },
-  ];
+  useEffect(() => {
+    const fetchGames = async () => {
+      setGamesLoading(true);
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/game`
+        );
+        const data = await response.json();
+
+        // Check if data is in the expected format and transform if needed
+        let gamesData;
+        if (data.data) {
+          // If the data is wrapped in a 'data' property
+          gamesData = data.data;
+        } else if (Array.isArray(data)) {
+          // If data is directly an array
+          gamesData = data;
+        } else {
+          gamesData = [];
+        }
+
+        setGames(gamesData);
+      } catch (error) {
+        setGames([]);
+      } finally {
+        setGamesLoading(false);
+      }
+    };
+
+    fetchGames();
+  }, []);
 
   useEffect(() => {
     // Simulate data fetching
@@ -148,17 +163,21 @@ const BracketsPage = () => {
         >
           <Plus />
         </Link>
-        {games.map((game) => {
-          return (
+        {gamesLoading ? (
+          <Skeleton className="w-full h-20" />
+        ) : games.length > 0 ? (
+          games.map((game) => (
             <Link
               href={`/admin/games/${game.id}`}
               key={game.id}
-              className="text-center"
+              className="text-center hover:text-purple-500 transition-colors"
             >
-              {game.name}
+              {game.name || "Unnamed Game"}
             </Link>
-          );
-        })}
+          ))
+        ) : (
+          <div className="text-gray-500">No games available</div>
+        )}
       </div>
       {loading ? (
         <Skeleton className="w-full h-96" />
