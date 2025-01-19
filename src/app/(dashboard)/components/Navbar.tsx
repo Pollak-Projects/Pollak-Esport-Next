@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
-import { Button } from "../../../components/ui/button";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { Skeleton } from "../../../components/ui/skeleton";
@@ -14,10 +13,21 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import logo from "@/tempimg/logo2.png";
-import { LogIn } from "lucide-react";
+import { User, Users, LogOut, Gamepad2, Settings } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import { signOut } from "next-auth/react";
 
-const Navbar = () => {
+const NavbarForLoggedIn = () => {
+  const { user, isLoading: authLoading } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
 
   const Links = [
@@ -42,6 +52,11 @@ const Navbar = () => {
     img.src = logo.src;
     img.onload = () => setIsLoading(false);
   }, []);
+
+  const handleLogout = (e: React.MouseEvent) => {
+    e.preventDefault();
+    signOut({ redirect: true, callbackUrl: "/" });
+  };
 
   return (
     <header className="w-[100dvw] pt-10 flex justify-between items-center md:px-20 max-md:pl-10 h-[80px] absolute top-0 ">
@@ -124,12 +139,57 @@ const Navbar = () => {
         </nav>
       </div>
       <div className="max-md:hidden">
-        <Link href="/login">
-          <LogIn size={40} />
-        </Link>
+        <DropdownMenu>
+          <DropdownMenuTrigger className="rounded-full p-0">
+            {" "}
+            <Image width={50} height={50} src={logo} alt="profile" priority />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuLabel>{user?.name || "Felhasználó"}</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            {user?.image ? (
+              <Image width={50} height={50} src={user.image} alt="profile" priority />
+            ) : (
+              <Image width={50} height={50} src={logo} alt="profile" priority />
+            )}
+            <Link href="/login">
+              <DropdownMenuItem className="hover:cursor-pointer">
+                <User />
+                Fiókom
+              </DropdownMenuItem>
+            </Link>
+            <Link href="/myteam">
+              <DropdownMenuItem className="hover:cursor-pointer">
+                <Users />
+                Csapatom
+              </DropdownMenuItem>
+            </Link>
+            <Link href="/games/0">
+              <DropdownMenuItem className="hover:cursor-pointer">
+                <Gamepad2 />
+                Versenyeim
+              </DropdownMenuItem>
+            </Link>
+            <DropdownMenuSeparator />
+            <Link href="/settings">
+              <DropdownMenuItem className="hover:cursor-pointer">
+                <Settings />
+                Beállítások
+              </DropdownMenuItem>
+            </Link>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem 
+              className="hover:cursor-pointer"
+              onClick={handleLogout}
+            >
+              <LogOut />
+              Kijelentkezés
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </header>
   );
 };
 
-export default Navbar;
+export default NavbarForLoggedIn;

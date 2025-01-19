@@ -1,15 +1,22 @@
 import "@/app/globals.css";
 import Providers from "./providers";
+import { AuthProvider } from "@/components/providers/AuthProvider";
+import NavbarManager from "@/components/NavbarManager";
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="hu">
-      <body className="antialiased dark min-h-screen w-full bg-gradient-to-t  from-purple-950/90 from-[3.6%] to-[90.4%] to-background ">
-        <Providers>{children}</Providers>
+      <body className="antialiased dark min-h-screen w-full bg-gradient-to-t from-purple-950/90 from-[3.6%] to-[90.4%] to-background">
+        <AuthProvider>
+          <Providers>
+            <NavbarManager />
+            {children}
+          </Providers>
+        </AuthProvider>
       </body>
     </html>
   );

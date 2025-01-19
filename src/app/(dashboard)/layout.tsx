@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "@/app/globals.css";
 import { Toaster } from "@/components/ui/sonner";
-import AdminNavbar from "./components/NavbarForLoggedIn";
+import AdminNavbar from "./components/Navbar";
 
 export const metadata: Metadata = {
   title: "Pollák ESport",

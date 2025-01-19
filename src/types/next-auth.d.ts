@@ -1,4 +1,4 @@
-import { type DefaultSession } from "next-auth";
+import NextAuth, { DefaultSession } from "next-auth";
 import { JWT } from "next-auth/jwt";
 import { NextRequest } from "next/server";
 
@@ -17,20 +17,20 @@ declare module "next-auth" {
 
     interface User {
         id?: string;
-        name?: string | null;
         email?: string | null;
+        name?: string | null;
+        firstName?: string | null;
+        lastName?: string | null;
         image?: string | null;
-        roles?: string[] | null;
-        token?: JWT | null;
+        roles?: string[];
+        token?: JWT;
     }
 
-    interface Session extends DefaultSession {
-        session: {
-            user: User;
-        };
-        // Do not question, it works
-        token?: JWT;
-        error?: "RefreshTokenError";
+    interface Session {
+        user: User;
+        token: JWT;
+        expires: string;
+        error?: "RefreshAccessTokenError";
     }
 
     interface NextAuthRequest extends NextRequest {
@@ -44,6 +44,6 @@ declare module "next-auth/jwt" {
         access_token?: string;
         expires_at?: number;
         refresh_token?: string;
-        error?: "RefreshTokenError";
+        error?: string;
     }
 }

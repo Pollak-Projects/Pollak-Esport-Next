@@ -12,7 +12,42 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Image from "next/image";
 import logo from "@/tempimg/logo2.png";
+import { useAuth } from "@/hooks/useAuth";
+import { useState, useEffect } from "react";
+import { User } from "next-auth";
+
+interface ExtendedUser extends User {
+  firstName?: string;
+  lastName?: string;
+}
+
+interface FormData {
+  firstName: string;
+  lastName: string;
+  username: string;
+  email: string;
+}
+
 const Settings = () => {
+  const { user, isLoading } = useAuth() as { user: ExtendedUser | null, isLoading: boolean };
+  const [formData, setFormData] = useState<FormData>({
+    firstName: "",
+    lastName: "",
+    username: "",
+    email: "",
+  });
+
+  useEffect(() => {
+    if (user) {
+      setFormData({
+        firstName: user.firstName || "",
+        lastName: user.lastName || "",
+        username: user.name || "",
+        email: user.email || "",
+      });
+    }
+  }, [user]);
+
   return (
     <div className="flex justify-center items-center h-screen">
       <Card className="w-4/6 h-4/5 mt-10">
@@ -37,7 +72,10 @@ const Settings = () => {
                     <Input
                       id="lastname"
                       className="w-full max-w-[12rem]"
-                      defaultValue={"Kis"}
+                      value={formData.lastName}
+                      onChange={(e) =>
+                        setFormData({ ...formData, lastName: e.target.value })
+                      }
                     />
                   </div>
                   <div className="flex flex-col space-y-4 w-full md:w-auto">
@@ -45,7 +83,10 @@ const Settings = () => {
                     <Input
                       id="firstname"
                       className="w-full max-w-[12rem]"
-                      defaultValue={"János"}
+                      value={formData.firstName}
+                      onChange={(e) =>
+                        setFormData({ ...formData, firstName: e.target.value })
+                      }
                     />
                   </div>
                   <div className="flex flex-col space-y-4 w-full md:w-auto">
@@ -53,7 +94,10 @@ const Settings = () => {
                     <Input
                       id="username"
                       className="w-full max-w-[12rem]"
-                      defaultValue={"kisjanos88"}
+                      value={formData.username}
+                      onChange={(e) =>
+                        setFormData({ ...formData, username: e.target.value })
+                      }
                     />
                   </div>
                   <div className="flex flex-col space-y-4 w-full md:w-auto">
@@ -61,7 +105,7 @@ const Settings = () => {
                     <Input
                       id="email"
                       className="w-full max-w-[18rem]"
-                      defaultValue={"kis.janos1988@gmail.com"}
+                      value={formData.email}
                       disabled
                     />
                   </div>
@@ -72,13 +116,23 @@ const Settings = () => {
                       className="rounded-full cursor-pointer overflow-hidden"
                       onClick={() => document.getElementById("avatar")?.click()}
                     >
-                      <Image
-                        src={logo}
-                        alt="Profile"
-                        width={200}
-                        height={200}
-                        className="hover:brightness-50 transition"
-                      />
+                      {user?.image ? (
+                        <Image
+                          src={user.image}
+                          alt="Profile"
+                          width={200}
+                          height={200}
+                          className="hover:brightness-50 transition"
+                        />
+                      ) : (
+                        <Image
+                          src={logo}
+                          alt="Profile"
+                          width={200}
+                          height={200}
+                          className="hover:brightness-50 transition"
+                        />
+                      )}
                     </div>
                     <input
                       type="file"

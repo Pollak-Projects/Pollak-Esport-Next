@@ -18,91 +18,82 @@ import { signIn } from "next-auth/react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 // import { cookies } from "next/headers";
 
-
 const Login = () => {
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 2000); // Simulate loading time
-    return () => clearTimeout(timer);
-  }, []);
-
-  // This can ONLY work from the server side
   const onSubmitLogin = async (event: FormEvent<HTMLFormElement>) => {
-    setLoading(false);
     event.preventDefault();
+    setIsLoading(true);
+    setError("");
 
     const formData = new FormData(event.currentTarget);
+    const username = formData.get("username") as string;
+    const password = formData.get("password") as string;
 
-    console.log(formData.get("username"));
-    console.log(formData.get("password"));
-
-    // TODO add proper form validation
-    if (formData.get("username") == "" || formData.get("password") == "") {
-      toast("Hiba történt a bejelentkezés során", {
-        description: "Kérlek próbáld újra!",
-        action: {
-          label: "Törlés",
-          onClick: () => console.log("Értesítés törölve!"),
-        },
+    try {
+      const result = await signIn("login", {
+        username,
+        password,
+        redirect: false,
       });
-      return;
+
+      if (result?.error) {
+        setError("Invalid username or password");
+        toast.error("Login failed");
+        return;
+      }
+
+      toast.success("Successfully logged in");
+      window.location.href = "/";
+    } catch (error) {
+      setError("An unexpected error occurred");
+      toast.error("Login failed");
+    } finally {
+      setIsLoading(false);
     }
-
-    // const csrfToken = (await cookies()).get("authjs.csrf-token")?.value ?? "";
-
-    await signIn("login", {
-      username: formData.get("username"),
-      password: formData.get("password"),
-      redirect: false,
-      // csrfToken: csrfToken,
-    });
-    setLoading(false);
-
-    toast("Sikeres bejelentkezés", {
-      description: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-      action: {
-        label: "Törlés",
-        onClick: () => console.log("Értesítés törölve!"),
-      },
-    });
   };
 
   const onSubmitSignup = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setIsLoading(true);
+    setError("");
 
     const formData = new FormData(event.currentTarget);
+    const [lastName, firstName] = (formData.get("fullName") as string).split(
+      " "
+    );
 
-    console.log(formData.get("username"));
+    try {
+      const response = await signIn("signup", {
+        user: JSON.stringify({
+          username: formData.get("username"),
+          email: formData.get("email"),
+          firstName: firstName || "",
+          lastName: lastName || "",
+          credentials: {
+            type: "password",
+            value: formData.get("password"),
+          },
+        }),
+        redirect: false,
+      });
 
-    await signIn("signup", {
-      user: JSON.stringify({
-        username: formData.get("username"),
-        email: formData.get("email"),
-        enabled: true,
-        firstName: formData.get("fullName"),
-        lastName: formData.get("fullName"),
-        credentials: {
-          type: "password",
-          value: formData.get("password")
-        }
-      }),
-      redirect: true
-    });
+      if (response?.error) {
+        toast.error("Registration failed");
+        setError(response.error);
+        return;
+      }
 
-    toast("Sikeres regisztráció", {
-      description: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-      action: {
-        label: "Törlés",
-        onClick: () => console.log("Értesítés törölve!"),
-      },
-    });
+      toast.success("Registration successful");
+      window.location.href = response?.url || "/";
+    } catch (error) {
+      console.error("Registration error:", error);
+      toast.error("An unexpected error occurred");
+      setError("Registration failed");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -117,7 +108,7 @@ const Login = () => {
           </TabsTrigger>
         </TabsList>
         <TabsContent value="login">
-          {loading ? (
+          {isLoading ? (
             <Skeleton className="w-[350px] h-[400px]" />
           ) : (
             <Card className="w-[350px]">
@@ -140,7 +131,7 @@ const Login = () => {
                         id="username"
                         name="username"
                         type="text"
-                        placeholder="kisjanos88"
+                        placeholder="gemesgergo"
                       />
                     </div>
                     <div className="flex flex-col space-y-1.5">
@@ -163,7 +154,7 @@ const Login = () => {
           )}
         </TabsContent>
         <TabsContent value="register">
-          {loading ? (
+          {isLoading ? (
             <Skeleton className="w-[350px] h-[400px]" />
           ) : (
             <Card className="w-[350px]">
@@ -173,9 +164,11 @@ const Login = () => {
               </CardHeader>
               <CardContent>
                 <form
-                    action="/api/auth/callback/signup"
-                    onSubmit={onSubmitSignup}
-                    method={"post"}>
+                  action="/api/auth/callback/signup"
+                  onSubmit={onSubmitSignup}
+                  method={"post"}
+                  className="space-y-4"
+                >
                   <div className="grid w-full items-center gap-4">
                     {["fullName", "username", "email", "password"].map(
                       (field) => (
@@ -202,11 +195,11 @@ const Login = () => {
                             }
                             placeholder={
                               field === "fullName"
-                                ? "Kis János"
+                                ? "Gémes Gergő"
                                 : field === "username"
-                                ? "kisjanos88"
+                                ? "gemesgergo"
                                 : field === "email"
-                                ? "kis.janos1988@gmail.com"
+                                ? "gemes.gergo@gmail.com"
                                 : "************"
                             }
                           />
@@ -214,14 +207,11 @@ const Login = () => {
                       )
                     )}
                   </div>
-                  <Button type="submit">
-                    Regisztrálás
-                  </Button>
+                  <div className="flex justify-center pt-2">
+                    <Button type="submit">Regisztrálás</Button>
+                  </div>
                 </form>
               </CardContent>
-              <CardFooter className="flex justify-center">
-
-              </CardFooter>
             </Card>
           )}
         </TabsContent>
