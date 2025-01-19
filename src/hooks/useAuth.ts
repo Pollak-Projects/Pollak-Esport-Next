@@ -13,10 +13,14 @@ export interface AuthUser {
 
 export function useAuth() {
   const { data: session, status } = useSession();
+  const user = session?.user as AuthUser | null;
+
+  const isAdmin = user?.roles?.includes("admin") || false;
 
   return {
-    user: session?.user as AuthUser | null,
+    user,
     isAuthenticated: status === "authenticated",
     isLoading: status === "loading",
+    isAdmin,
   };
 }

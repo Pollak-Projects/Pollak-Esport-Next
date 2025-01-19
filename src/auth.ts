@@ -13,7 +13,10 @@ import { createKeycloakUser } from "@/lib/keycloak";
 
 interface KeycloakPayload extends JwtPayload {
   resource_access?: {
-    [key: string]: { roles: string[] };
+    frontend?: {
+      roles: string[];
+    };
+    [key: string]: any;
   };
   realm_access?: {
     roles: string[];
@@ -234,15 +237,11 @@ const authOptions = {
           user: {
             id: payload.sub,
             email: payload.email,
-            name: payload.preferred_username || payload.name, // Use username instead of name
+            name: payload.preferred_username || payload.name,
             firstName: payload.given_name,
             lastName: payload.family_name,
             image: payload.picture,
-            roles: [
-              ...(payload.resource_access?.[process.env.AUTH_KEYCLOAK_ID!]
-                ?.roles || []),
-              ...(payload.realm_access?.roles || []),
-            ],
+            roles: payload.resource_access?.frontend?.roles || [],
           },
           token,
           error: undefined,

@@ -22,7 +22,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import logo from "@/tempimg/logo2.png";
-import { User, Users, LogOut, Gamepad2, Settings, LogIn } from "lucide-react";
+import {
+  User,
+  Users,
+  LogOut,
+  Gamepad2,
+  Settings,
+  LogIn,
+  Shield,
+} from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { signOut } from "next-auth/react";
 import { toast } from "sonner";
@@ -34,7 +42,7 @@ const Links = [
 ];
 
 export default function Navbar() {
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, isAdmin } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
   const pathname = usePathname();
 
@@ -153,6 +161,26 @@ export default function Navbar() {
                 Versenyeim
               </DropdownMenuItem>
             </Link>
+            {isAdmin && (
+              <>
+                <DropdownMenuSeparator />
+                <DropdownMenuLabel className="font-bold">
+                  Admin
+                </DropdownMenuLabel>
+                <Link href="/admin/users">
+                  <DropdownMenuItem>
+                    <Shield className="mr-2" />
+                    Felhasználók kezelése
+                  </DropdownMenuItem>
+                </Link>
+                <Link href="/admin/tournaments">
+                  <DropdownMenuItem>
+                    <Gamepad2 className="mr-2" />
+                    Versenyek kezelése
+                  </DropdownMenuItem>
+                </Link>
+              </>
+            )}
             <DropdownMenuSeparator />
             <Link href="/settings">
               <DropdownMenuItem>
