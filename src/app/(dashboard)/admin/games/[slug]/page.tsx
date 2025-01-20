@@ -74,6 +74,25 @@ const BracketsPage = () => {
 
   const handleDelete = async () => {
     try {
+      // Delete image from bucket
+      const imageUrl = currentGame.data[0].image;
+      const imagePath = imageUrl.split("/gamepic/").pop();
+
+      const deleteImageResponse = await fetch(
+        `${process.env.NEXT_PUBLIC_STORAGE_URL}/gamepic/${imagePath}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`,
+          },
+        }
+      );
+
+      if (!deleteImageResponse.ok) {
+        console.error("Failed to delete image from storage");
+      }
+
+      // Delete game from database
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/game/${currentId}`,
         {
@@ -89,6 +108,7 @@ const BracketsPage = () => {
       }
     } catch (error) {
       toast.error("Hiba történt a játék törlése közben");
+      console.error("Delete error:", error);
     }
   };
 
@@ -113,7 +133,9 @@ const BracketsPage = () => {
               <Link
                 href={`/admin/games/${game.id}`}
                 key={game.id}
-                className="text-center hover:text-purple-500 transition-colors"
+                className={`text-center transition-colors ${
+                  game?.id?.toString() === currentId ? "text-white" : "text-white/50"
+                } hover:text-purple-500`}
               >
                 {game.name || "Unnamed Game"}
               </Link>
@@ -198,7 +220,7 @@ const BracketsPage = () => {
         </div>
       </div>
       {isModalOpen && (
-        <AddGameModal onClose={handleModalToggle} onSuccess={handleModalToggle}>
+        <AddGameModal onClose={handleModalToggle}>
           <div className="p-4">{/* Modal content goes here */}</div>
         </AddGameModal>
       )}
