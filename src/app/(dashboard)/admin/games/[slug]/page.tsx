@@ -16,6 +16,8 @@ import Link from "next/link";
 import { Plus, Save, Pencil, Trash2 } from "lucide-react";
 import AddGameModal from "@/app/(dashboard)/components/addGameModal";
 import Spinner from "@/components/Spinner";
+import { toast } from "sonner";
+import DeleteConfirmationModal from "@/app/(dashboard)/components/deleteConfirmationModal";
 
 const getGames = async () => {
   const res = await fetch(`https://esportbackend.gemes.eu/game`, {
@@ -31,6 +33,7 @@ const BracketsPage = () => {
   const params = useParams<{ slug: string }>();
   const currentId = params.slug;
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const {
     data: currentGame,
@@ -60,8 +63,33 @@ const BracketsPage = () => {
   };
 
   const handleSave = async () => {
-    // TODO: Implement save functionality
-    console.log("Saving bracket changes...");
+    try {
+      // TODO: Implement save functionality
+      console.log("Saving bracket changes...");
+      toast.success("A változtatások sikeresen mentve");
+    } catch (error) {
+      toast.error("Nem sikerült menteni a változtatásokat");
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/game/${currentId}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (response.ok) {
+        toast.success("A játék sikeresen törölve");
+        window.location.href = "/admin/games";
+      } else {
+        toast.error("Nem sikerült törölni a játékot");
+      }
+    } catch (error) {
+      toast.error("Hiba történt a játék törlése közben");
+    }
   };
 
   if (currentGameLoading || gamesLoading) {
@@ -162,7 +190,7 @@ const BracketsPage = () => {
             <Save />
           </button>
           <button
-            onClick={() => console.log("Delete clicked")}
+            onClick={() => setIsDeleteModalOpen(true)}
             className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center hover:bg-red-700 transition-colors"
           >
             <Trash2 />
@@ -173,6 +201,16 @@ const BracketsPage = () => {
         <AddGameModal onClose={handleModalToggle} onSuccess={handleModalToggle}>
           <div className="p-4">{/* Modal content goes here */}</div>
         </AddGameModal>
+      )}
+      {isDeleteModalOpen && (
+        <DeleteConfirmationModal
+          onClose={() => setIsDeleteModalOpen(false)}
+          onConfirm={() => {
+            handleDelete();
+            setIsDeleteModalOpen(false);
+          }}
+          gameName={currentGame.data[0].name}
+        />
       )}
     </div>
   );

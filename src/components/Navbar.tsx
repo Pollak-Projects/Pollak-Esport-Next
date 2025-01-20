@@ -143,7 +143,7 @@ export default function Navbar() {
                     Csapatom
                   </Link>
                   <Link
-                    href="/games/0"
+                    href="/games"
                     onClick={closeMenu}
                     className="flex items-center gap-2"
                   >
