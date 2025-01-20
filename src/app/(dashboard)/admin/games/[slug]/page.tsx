@@ -80,15 +80,17 @@ const BracketsPage = () => {
     <div className="w-full h-full flex pt-[100px] flex-row pl-12 pb-24">
       <div className="fixed left-12 top-[100px] bottom-0 w-64 items-center pt-4 pr-12 border-r-[1px] border-r-border flex flex-col gap-5 text-2xl">
         {games.data.length > 0 ? (
-          games.data.map((game) => (
-            <Link
-              href={`/admin/games/${game.id}`}
-              key={game.id}
-              className="text-center hover:text-purple-500 transition-colors"
-            >
-              {game.name || "Unnamed Game"}
-            </Link>
-          ))
+          games.data.map(
+            (game: { id: React.Key | null | undefined; name: any }) => (
+              <Link
+                href={`/admin/games/${game.id}`}
+                key={game.id}
+                className="text-center hover:text-purple-500 transition-colors"
+              >
+                {game.name || "Unnamed Game"}
+              </Link>
+            )
+          )
         ) : (
           <div className="text-gray-500">No games available</div>
         )}
