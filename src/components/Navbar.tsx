@@ -45,6 +45,7 @@ const Links = [
 export default function Navbar() {
   const { user } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -67,13 +68,15 @@ export default function Navbar() {
     }
   };
 
+  const closeMenu = () => setIsOpen(false);
+
   const renderNavLinks = () => (
     <ul className="flex gap-4 text-2xl items-center max-md:hidden">
       {Links.map((link) => (
         <li key={link.title}>
           <Link
             href={link.link}
-            className={link.link === pathname ? "text-white/50" : "text-white"}
+            className={link.link === pathname ? "text-white" : "text-white/50"}
           >
             {link.title}
           </Link>
@@ -83,7 +86,7 @@ export default function Navbar() {
   );
 
   const renderMobileMenu = () => (
-    <Sheet>
+    <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
         <button className="md:hidden flex flex-col justify-between w-[50px] h-[30px]">
           <div className="w-full h-0.5 bg-white"></div>
@@ -98,22 +101,124 @@ export default function Navbar() {
           </SheetTitle>
           <SheetDescription></SheetDescription>
         </SheetHeader>
-        <nav>
-          <ul className="flex flex-col gap-4 text-2xl w-full items-start mt-3">
-            {Links.map((link) => (
-              <li key={link.title}>
-                <Link
-                  href={link.link}
-                  className={
-                    link.link === pathname ? "text-white/50" : "text-white"
-                  }
-                >
-                  {link.title}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
+        <div className="flex flex-col gap-6">
+          <nav>
+            <ul className="flex flex-col gap-4 text-2xl w-full items-start mt-3">
+              {Links.map((link) => (
+                <li key={link.title}>
+                  <Link
+                    href={link.link}
+                    onClick={closeMenu}
+                    className={
+                      link.link === pathname ? "text-white" : "text-white/50"
+                    }
+                  >
+                    {link.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+          <div className="md:hidden">
+            {isLoading ? (
+              <Skeleton className="w-full h-[50px]" />
+            ) : user ? (
+              <div className="flex flex-col gap-4">
+                <div className="flex items-center gap-3">
+                  {user?.image ? (
+                    <Image
+                      width={50}
+                      height={50}
+                      src={user.image}
+                      alt="profile"
+                      className="rounded-full"
+                      priority
+                    />
+                  ) : (
+                    <div className="w-[50px] h-[50px] rounded-full bg-primary flex items-center justify-center">
+                      {user?.name?.charAt(0) || "U"}
+                    </div>
+                  )}
+                  <span className="text-xl">{user?.name || "Felhasználó"}</span>
+                </div>
+                <div className="flex flex-col gap-2">
+                  <Link
+                    href="/profile"
+                    onClick={closeMenu}
+                    className="flex items-center gap-2"
+                  >
+                    <User size={20} />
+                    Fiókom
+                  </Link>
+                  <Link
+                    href="/myteam"
+                    onClick={closeMenu}
+                    className="flex items-center gap-2"
+                  >
+                    <Users size={20} />
+                    Csapatom
+                  </Link>
+                  <Link
+                    href="/games/0"
+                    onClick={closeMenu}
+                    className="flex items-center gap-2"
+                  >
+                    <Gamepad2 size={20} />
+                    Versenyeim
+                  </Link>
+                  <AdminCheck>
+                    <div className="border-t border-white/20 my-2 pt-2">
+                      <div className="font-bold mb-2">Admin</div>
+                      <Link
+                        href="/admin/users"
+                        onClick={closeMenu}
+                        className="flex items-center gap-2"
+                      >
+                        <Shield size={20} />
+                        Felhasználók kezelése
+                      </Link>
+                      <Link
+                        href="/admin/games/0"
+                        onClick={closeMenu}
+                        className="flex items-center gap-2"
+                      >
+                        <Gamepad2 size={20} />
+                        Versenyek kezelése
+                      </Link>
+                    </div>
+                  </AdminCheck>
+                  <div className="border-t border-white/20 my-2 pt-2">
+                    <Link
+                      href="/settings"
+                      onClick={closeMenu}
+                      className="flex items-center gap-2"
+                    >
+                      <Settings size={20} />
+                      Beállítások
+                    </Link>
+                    <button
+                      onClick={(e) => {
+                        closeMenu();
+                        handleLogout(e);
+                      }}
+                      className="flex items-center gap-2 mt-2 text-red-500"
+                    >
+                      <LogOut size={20} />
+                      Kijelentkezés
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <Link href="/login" onClick={closeMenu}>
+                <Button variant="outline" className="w-full">
+                  <LogIn className="mr-2" />
+                  Bejelentkezés
+                </Button>
+              </Link>
+            )}
+          </div>
+        </div>
       </SheetContent>
     </Sheet>
   );
