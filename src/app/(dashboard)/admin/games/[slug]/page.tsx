@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Circle } from "lucide-react";
 import {
@@ -11,20 +11,32 @@ import {
   SeedTeam,
   IRenderSeedProps,
 } from "react-brackets";
-import { Skeleton } from "@/components/ui/skeleton";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { Plus, Save, Pencil, Trash2 } from "lucide-react";
 import AddGameModal from "@/app/(dashboard)/components/addGameModal";
+import Spinner from "@/components/Spinner";
+
+const getGames = async () => {
+  const res = await fetch(`https://esportbackend.gemes.eu/game`, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  return res.json();
+};
 
 const BracketsPage = () => {
   const params = useParams<{ slug: string }>();
   const currentId = params.slug;
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [games, setGames] = useState<Array<{ id: number; name: string }>>([]);
-  const [gamesLoading, setGamesLoading] = useState(true);
 
-  const { data, error, isLoading } = useQuery({
+  const {
+    data: currentGame,
+    error: currentGameError,
+    isLoading: currentGameLoading,
+  } = useQuery({
     queryKey: ["games", currentId],
     queryFn: async () => {
       const res = await fetch(
@@ -32,6 +44,15 @@ const BracketsPage = () => {
       );
       return res.json();
     },
+  });
+
+  const {
+    data: games,
+    error: gamesError,
+    isLoading: gamesLoading,
+  } = useQuery({
+    queryKey: ["games"],
+    queryFn: getGames,
   });
 
   const handleModalToggle = () => {
@@ -43,44 +64,12 @@ const BracketsPage = () => {
     console.log("Saving bracket changes...");
   };
 
-  useEffect(() => {
-    const fetchGames = async () => {
-      setGamesLoading(true);
-      try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/game`
-        );
-        const data = await response.json();
-
-        // Check if data is in the expected format and transform if needed
-        let gamesData;
-        if (data.data) {
-          // If the data is wrapped in a 'data' property
-          gamesData = data.data;
-        } else if (Array.isArray(data)) {
-          // If data is directly an array
-          gamesData = data;
-        } else {
-          gamesData = [];
-        }
-
-        setGames(gamesData);
-      } catch (error) {
-        setGames([]);
-      } finally {
-        setGamesLoading(false);
-      }
-    };
-
-    fetchGames();
-  }, []);
-
-  if (isLoading) {
-    return <Skeleton className="w-full h-96" />;
+  if (currentGameLoading || gamesLoading) {
+    return <Spinner />;
   }
 
   const rounds: IRoundProps[] = [];
-  data.data[0].bracket
+  currentGame.data[0].bracket
     .replaceAll(`\\`, "")
     .split(";")
     .map((round: string) => {
@@ -90,10 +79,8 @@ const BracketsPage = () => {
   return (
     <div className="w-full h-full flex pt-[100px] flex-row pl-12 pb-24">
       <div className="fixed left-12 top-[100px] bottom-0 w-64 items-center pt-4 pr-12 border-r-[1px] border-r-border flex flex-col gap-5 text-2xl">
-        {gamesLoading ? (
-          <Skeleton className="w-full h-20" />
-        ) : games.length > 0 ? (
-          games.map((game) => (
+        {games.data.length > 0 ? (
+          games.data.map((game) => (
             <Link
               href={`/admin/games/${game.id}`}
               key={game.id}
@@ -112,35 +99,35 @@ const BracketsPage = () => {
             <div className="flex justify-start gap-2 items-center bg-slate-900 py-2 px-5">
               <Circle
                 fill={
-                  data.data[0].status === "Hamarosan"
+                  currentGame.data[0].status === "Hamarosan"
                     ? "gray"
-                    : data.data[0].status === "Vége"
+                    : currentGame.data[0].status === "Vége"
                     ? "red"
                     : "green"
                 }
                 size={15}
                 color={
-                  data.data[0].status === "Hamarosan"
+                  currentGame.data[0].status === "Hamarosan"
                     ? "gray"
-                    : data.data[0].status === "Vége"
+                    : currentGame.data[0].status === "Vége"
                     ? "red"
                     : "green"
                 }
               />
-              {data.data[0].status}
+              {currentGame.data[0].status}
             </div>
             <div>
-              {data.data[0].name +
+              {currentGame.data[0].name +
                 " - " +
-                data.data[0].playerPerTeam +
+                currentGame.data[0].playerPerTeam +
                 "v" +
-                data.data[0].playerPerTeam}
+                currentGame.data[0].playerPerTeam}
             </div>
           </div>
           <div>
-            {data.data[0].startDate.split("T")[0].replaceAll("-", ".") +
+            {currentGame.data[0].startDate.split("T")[0].replaceAll("-", ".") +
               " - " +
-              data.data[0].endDate.split("T")[0].replaceAll("-", ".")}
+              currentGame.data[0].endDate.split("T")[0].replaceAll("-", ".")}
           </div>
         </div>
         <Bracket
@@ -246,10 +233,14 @@ const CustomSeed = ({ seed }: IRenderSeedProps) => {
                 value={team1Score}
                 onChange={(e) => handleScoreChange(0, parseInt(e.target.value))}
                 className="px-2 py-1 bg-slate-800 text-white rounded border border-gray-600 w-12"
-                style={{ color: 'white', backgroundColor: '#1e293b' }}
+                style={{ color: "white", backgroundColor: "#1e293b" }}
               >
                 {[0, 1, 2, 3, 4, 5].map((score) => (
-                  <option key={score} value={score} style={{ backgroundColor: '#1e293b' }}>
+                  <option
+                    key={score}
+                    value={score}
+                    style={{ backgroundColor: "#1e293b" }}
+                  >
                     {score}
                   </option>
                 ))}
@@ -265,10 +256,14 @@ const CustomSeed = ({ seed }: IRenderSeedProps) => {
                 value={team1Name}
                 onChange={(e) => handleNameChange(0, e.target.value)}
                 className="truncate bg-slate-800 text-white border border-gray-600 rounded px-2 py-1"
-                style={{ color: 'white', backgroundColor: '#1e293b' }}
+                style={{ color: "white", backgroundColor: "#1e293b" }}
               >
                 {teamOptions.map((team) => (
-                  <option key={team} value={team} style={{ backgroundColor: '#1e293b' }}>
+                  <option
+                    key={team}
+                    value={team}
+                    style={{ backgroundColor: "#1e293b" }}
+                  >
                     {team}
                   </option>
                 ))}
@@ -288,10 +283,14 @@ const CustomSeed = ({ seed }: IRenderSeedProps) => {
                 value={team2Score}
                 onChange={(e) => handleScoreChange(1, parseInt(e.target.value))}
                 className="px-2 py-1 bg-slate-800 text-white rounded border border-gray-600 w-12"
-                style={{ color: 'white', backgroundColor: '#1e293b' }}
+                style={{ color: "white", backgroundColor: "#1e293b" }}
               >
                 {[0, 1, 2, 3, 4, 5].map((score) => (
-                  <option key={score} value={score} style={{ backgroundColor: '#1e293b' }}>
+                  <option
+                    key={score}
+                    value={score}
+                    style={{ backgroundColor: "#1e293b" }}
+                  >
                     {score}
                   </option>
                 ))}
@@ -307,10 +306,14 @@ const CustomSeed = ({ seed }: IRenderSeedProps) => {
                 value={team2Name}
                 onChange={(e) => handleNameChange(1, e.target.value)}
                 className="truncate bg-slate-800 text-white border border-gray-600 rounded px-2 py-1"
-                style={{ color: 'white', backgroundColor: '#1e293b' }}
+                style={{ color: "white", backgroundColor: "#1e293b" }}
               >
                 {teamOptions.map((team) => (
-                  <option key={team} value={team} style={{ backgroundColor: '#1e293b' }}>
+                  <option
+                    key={team}
+                    value={team}
+                    style={{ backgroundColor: "#1e293b" }}
+                  >
                     {team}
                   </option>
                 ))}
