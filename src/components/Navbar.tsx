@@ -22,15 +22,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import logo from "@/tempimg/logo2.png";
-import {
-  User,
-  Users,
-  LogOut,
-  Gamepad2,
-  Settings,
-  LogIn,
-  Shield,
-} from "lucide-react";
+import { Users, LogOut, Gamepad2, Settings, LogIn, Shield } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { signOut } from "next-auth/react";
 import { toast } from "sonner";
@@ -143,14 +135,6 @@ export default function Navbar() {
                 </div>
                 <div className="flex flex-col gap-2">
                   <Link
-                    href="/profile"
-                    onClick={closeMenu}
-                    className="flex items-center gap-2"
-                  >
-                    <User size={20} />
-                    Fiókom
-                  </Link>
-                  <Link
                     href="/myteam"
                     onClick={closeMenu}
                     className="flex items-center gap-2"
@@ -253,12 +237,6 @@ export default function Navbar() {
                 {user?.name || "Felhasználó"}
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <Link href="/profile">
-                <DropdownMenuItem>
-                  <User />
-                  Fiókom
-                </DropdownMenuItem>
-              </Link>
               <Link href="/myteam">
                 <DropdownMenuItem>
                   <Users />
