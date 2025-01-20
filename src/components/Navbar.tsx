@@ -28,6 +28,13 @@ import { signOut } from "next-auth/react";
 import { toast } from "sonner";
 import { AdminCheck, UserCheck } from "@/lib/PermissionCheck";
 
+const getMonogram = (firstName: string | null | undefined, lastName: string | null | undefined): string => {
+  if (!firstName && !lastName) return "U";
+  if (!firstName) return lastName!.charAt(0);
+  if (!lastName) return firstName.charAt(0);
+  return `${firstName.charAt(0)}${lastName.charAt(0)}`;
+};
+
 const Links = [
   { title: "Kezdőlap", link: "/" },
   { title: "Játékok", link: "/games" },
@@ -127,8 +134,8 @@ export default function Navbar() {
                       priority
                     />
                   ) : (
-                    <div className="w-[50px] h-[50px] rounded-full bg-primary flex items-center justify-center">
-                      {user?.name?.charAt(0) || "U"}
+                    <div className="w-[50px] h-[50px] rounded-full bg-primary flex items-center justify-center text-black text-xl">
+                      {getMonogram(user?.firstName, user?.lastName)}
                     </div>
                   )}
                   <span className="text-xl">{user?.name || "Felhasználó"}</span>
@@ -227,8 +234,8 @@ export default function Navbar() {
                   priority
                 />
               ) : (
-                <div className="w-[50px] h-[50px] rounded-full bg-primary flex items-center justify-center">
-                  {user?.name?.charAt(0) || "U"}
+                <div className="w-[50px] h-[50px] rounded-full bg-primary flex items-center justify-center text-black text-xl">
+                  {getMonogram(user?.firstName, user?.lastName)}
                 </div>
               )}
             </DropdownMenuTrigger>
