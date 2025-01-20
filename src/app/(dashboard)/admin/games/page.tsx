@@ -44,7 +44,7 @@ const GamesPage = () => {
           <Plus />
         </button>
         {isModalOpen && (
-          <AddGameModal onClose={handleModalToggle} onSuccess={handleModalToggle}>
+          <AddGameModal onClose={handleModalToggle}>
             <div className="p-4">{/* Modal content goes here */}</div>
           </AddGameModal>
         )}
