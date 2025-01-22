@@ -1,6 +1,5 @@
 import "@/app/globals.css";
-import Providers from "./providers";
-import { AuthProvider } from "@/components/providers/AuthProvider";
+import Providers from "../components/providers/Providers";
 import Navbar from "@/components/Navbar";
 
 export default function RootLayout({
@@ -11,12 +10,10 @@ export default function RootLayout({
   return (
     <html lang="hu">
       <body className="antialiased dark min-h-screen w-full bg-gradient-to-t from-[#2f275c] bg-fixed bg-no-repeat from-[3.6%] to-[45%] to-background">
-        <AuthProvider>
-          <Providers>
-            <Navbar />
-            {children}
-          </Providers>
-        </AuthProvider>
+        <Providers>
+          <Navbar />
+          {children}
+        </Providers>
       </body>
     </html>
   );
