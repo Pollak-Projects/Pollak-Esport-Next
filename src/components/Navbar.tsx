@@ -169,7 +169,7 @@ export default function Navbar() {
                         Felhasználók kezelése
                       </Link>
                       <Link
-                        href="/admin/games/0"
+                        href="/admin/games"
                         onClick={closeMenu}
                         className="flex items-center gap-2"
                       >
@@ -267,7 +267,7 @@ export default function Navbar() {
                     Felhasználók kezelése
                   </DropdownMenuItem>
                 </Link>
-                <Link href="/admin/games/0">
+                <Link href="/admin/games">
                   <DropdownMenuItem>
                     <Gamepad2 className="mr-2" />
                     Versenyek kezelése
