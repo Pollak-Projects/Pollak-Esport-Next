@@ -1,4 +1,5 @@
 "use client";
+import { useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -26,10 +27,26 @@ const getGames = async () => {
 
 const Games = () => {
   const [hover, setHover] = React.useState<number>();
+  const [showAnimation, setShowAnimation] = React.useState(false);
+  const [audio, setAudio] = React.useState<HTMLAudioElement | null>(null);
+  
+  useEffect(() => {
+    setAudio(new Audio("https://supaesport.gemes.eu/storage/v1/object/public/sounds/secret.mp3"));
+  }, []);
+
   const { data, error, isLoading } = useQuery({
     queryKey: ["games"],
     queryFn: getGames,
   });
+
+  const playSound = () => {
+    if (audio) {
+      audio.currentTime = 0;
+      audio.play();
+      setShowAnimation(true);
+      setTimeout(() => setShowAnimation(false), 2000);
+    }
+  };
 
   if (isLoading) {
     return <Spinner />;
@@ -37,6 +54,33 @@ const Games = () => {
 
   return (
     <>
+      {showAnimation && (
+        <div className="fixed inset-0 pointer-events-none z-[9999]">
+          <Image
+            src="https://supaesport.gemes.eu/storage/v1/object/public/sounds/secret.jpg"
+            alt="Flying"
+            width={1000}
+            height={1000}
+            className="absolute animate-fly"
+          />
+        </div>
+      )}
+      <div className="fixed bottom-4 right-4 z-50">
+        <button
+          onClick={playSound}
+          className="select-none pointer-events-auto"
+          tabIndex={-1}
+        >
+          <Image
+            src="https://supaesport.gemes.eu/storage/v1/object/public/sounds/secret.jpg"
+            alt="secret"
+            width={1}
+            height={1}
+            className="object-cover select-none pointer-events-none"
+            draggable="false"
+          />
+        </button>
+      </div>
       <div className="grid pt-[140px] grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 p-4 mx-auto max-w-[1400px] ">
         {data.data.map((game: any, i: number) => (
           <Link key={game.name} href={`/games/${game.id}`}>
