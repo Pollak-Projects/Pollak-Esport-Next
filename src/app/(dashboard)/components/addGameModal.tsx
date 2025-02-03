@@ -133,20 +133,23 @@ const AddGameModal: React.FC<AddGameModalProps> = ({ children, onClose }) => {
       );
 
       if (!response.ok) {
-        const errorData = await response.text();
-        console.error("Game creation failed:", {
-          status: response.status,
-          statusText: response.statusText,
-          errorData,
-        });
         throw new Error(
           `Játék létrehozása sikertelen (${response.status}): ${response.statusText}`
         );
       }
 
-      const newGame = await response.json();
+      const result = await response.json();
+
+      if (!result?.data?.id) {
+        throw new Error("Nem sikerült létrehozni a játékot: hiányzó azonosító");
+      }
+
       toast.success("Játék sikeresen hozzáadva!");
-      window.location.href = `/admin/games/${newGame.data.id}`;
+
+      // Add a small delay to ensure the toast is visible
+      setTimeout(() => {
+        window.location.href = `/admin/games/${result.data.id}`;
+      }, 500);
     } catch (error) {
       console.error("Form submission error:", error);
       if (error instanceof Error) {
