@@ -108,7 +108,14 @@ const AddGameModal: React.FC<AddGameModalProps> = ({ children, onClose }) => {
       const imageUrl = await uploadImage(selectedFile);
 
       const formatDate = (date: Date) => {
-        return date.toISOString().split("T")[0];
+        const localDate = new Date(date);
+        return (
+          localDate.getFullYear() +
+          "-" +
+          String(localDate.getMonth() + 1).padStart(2, "0") +
+          "-" +
+          String(localDate.getDate()).padStart(2, "0")
+        );
       };
 
       const response = await fetch(

@@ -49,8 +49,15 @@ const EditGameModal: React.FC<EditGameModalProps> = ({
     game.playerPerTeam
   );
   const [description, setDescription] = useState<string>(game.description);
-  const [startDate, setStartDate] = useState<Date>(new Date(game.startDate));
-  const [endDate, setEndDate] = useState<Date>(new Date(game.endDate));
+  const [startDate, setStartDate] = useState<Date>(() => {
+    const [year, month, day] = game.startDate.split("-");
+    return new Date(Number(year), Number(month) - 1, Number(day));
+  });
+
+  const [endDate, setEndDate] = useState<Date>(() => {
+    const [year, month, day] = game.endDate.split("-");
+    return new Date(Number(year), Number(month) - 1, Number(day));
+  });
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -121,7 +128,13 @@ const EditGameModal: React.FC<EditGameModalProps> = ({
       }
 
       const formatDate = (date: Date) => {
-        return date.toISOString().split("T")[0];
+        return (
+          date.getFullYear() +
+          "-" +
+          String(date.getMonth() + 1).padStart(2, "0") +
+          "-" +
+          String(date.getDate()).padStart(2, "0")
+        );
       };
 
       const response = await fetch(
