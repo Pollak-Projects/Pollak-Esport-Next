@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { hu } from "date-fns/locale";
 import {
   Card,
@@ -50,13 +50,17 @@ const EditGameModal: React.FC<EditGameModalProps> = ({
   );
   const [description, setDescription] = useState<string>(game.description);
   const [startDate, setStartDate] = useState<Date>(() => {
-    const [year, month, day] = game.startDate.split("-");
-    return new Date(Number(year), Number(month) - 1, Number(day));
+    const date = game.startDate.split("T")[0];
+    const [year, month, day] = date.split("-");
+    const parsedDate = new Date(Number(year), Number(month) - 1, Number(day));
+    return parsedDate;
   });
 
   const [endDate, setEndDate] = useState<Date>(() => {
-    const [year, month, day] = game.endDate.split("-");
-    return new Date(Number(year), Number(month) - 1, Number(day));
+    const date = game.endDate.split("T")[0];
+    const [year, month, day] = date.split("-");
+    const parsedDate = new Date(Number(year), Number(month) - 1, Number(day));
+    return parsedDate;
   });
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
