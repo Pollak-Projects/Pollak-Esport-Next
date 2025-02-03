@@ -121,9 +121,7 @@ const EditGameModal: React.FC<EditGameModalProps> = ({
       }
 
       const formatDate = (date: Date) => {
-        const newDate = new Date(date);
-        newDate.setDate(newDate.getDate() + 1);
-        return newDate.toISOString().split("T")[0];
+        return date.toISOString().split("T")[0];
       };
 
       const response = await fetch(

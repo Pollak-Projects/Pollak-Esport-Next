@@ -107,11 +107,8 @@ const AddGameModal: React.FC<AddGameModalProps> = ({ children, onClose }) => {
       setIsSubmitting(true);
       const imageUrl = await uploadImage(selectedFile);
 
-      // Összevont dátumkezelő függvény
       const formatDate = (date: Date) => {
-        const newDate = new Date(date);
-        newDate.setDate(newDate.getDate() + 1);
-        return newDate.toISOString().split("T")[0];
+        return date.toISOString().split("T")[0];
       };
 
       const response = await fetch(
