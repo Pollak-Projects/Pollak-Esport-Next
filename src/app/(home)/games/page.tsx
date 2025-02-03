@@ -16,7 +16,7 @@ import { cn } from "@/lib/utils";
 import { Circle } from "lucide-react";
 
 const getGames = async () => {
-  const res = await fetch(`https://esportbackend.gemes.eu/game`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/game`, {
     headers: {
       "Content-Type": "application/json",
     },
@@ -29,9 +29,13 @@ const Games = () => {
   const [hover, setHover] = React.useState<number>();
   const [showAnimation, setShowAnimation] = React.useState(false);
   const [audio, setAudio] = React.useState<HTMLAudioElement | null>(null);
-  
+
   useEffect(() => {
-    setAudio(new Audio("https://supaesport.gemes.eu/storage/v1/object/public/sounds/secret.mp3"));
+    setAudio(
+      new Audio(
+        `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/sounds/secret.mp3`
+      )
+    );
   }, []);
 
   const { data, error, isLoading } = useQuery({
@@ -57,7 +61,7 @@ const Games = () => {
       {showAnimation && (
         <div className="fixed inset-0 pointer-events-none z-[9999]">
           <Image
-            src="https://supaesport.gemes.eu/storage/v1/object/public/sounds/secret.jpg"
+            src={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/sounds/secret.jpg`}
             alt="Flying"
             width={1000}
             height={1000}
@@ -72,7 +76,7 @@ const Games = () => {
           tabIndex={-1}
         >
           <Image
-            src="https://supaesport.gemes.eu/storage/v1/object/public/sounds/secret.jpg"
+            src={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/sounds/secret.jpg`}
             alt="secret"
             width={1}
             height={1}

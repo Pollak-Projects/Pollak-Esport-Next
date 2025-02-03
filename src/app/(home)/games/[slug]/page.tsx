@@ -26,7 +26,7 @@ const BracketsPage = () => {
 
   const getRounds = async () => {
     const res = await fetch(
-      `https://esportbackend.gemes.eu/game/${currentId}`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/game/${currentId}`,
       {
         headers: {
           "Content-Type": "application/json",

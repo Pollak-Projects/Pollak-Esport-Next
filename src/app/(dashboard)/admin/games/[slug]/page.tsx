@@ -18,9 +18,10 @@ import AddGameModal from "@/app/(dashboard)/components/addGameModal";
 import Spinner from "@/components/Spinner";
 import { toast } from "sonner";
 import DeleteConfirmationModal from "@/app/(dashboard)/components/deleteConfirmationModal";
+import EditGameModal from "@/app/(dashboard)/components/editGameModal";
 
 const getGames = async () => {
-  const res = await fetch(`https://esportbackend.gemes.eu/game`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/game`, {
     headers: {
       "Content-Type": "application/json",
     },
@@ -34,6 +35,7 @@ const BracketsPage = () => {
   const currentId = params.slug;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const {
     data: currentGame,
@@ -134,7 +136,9 @@ const BracketsPage = () => {
                 href={`/admin/games/${game.id}`}
                 key={game.id}
                 className={`text-center transition-colors ${
-                  game?.id?.toString() === currentId ? "text-white" : "text-white/50"
+                  game?.id?.toString() === currentId
+                    ? "text-white"
+                    : "text-white/50"
                 } hover:text-purple-500`}
               >
                 {game.name || "Unnamed Game"}
@@ -200,7 +204,7 @@ const BracketsPage = () => {
             <Plus />
           </button>
           <button
-            onClick={() => console.log("Edit clicked")}
+            onClick={() => setIsEditModalOpen(true)}
             className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors"
           >
             <Pencil />
@@ -233,6 +237,14 @@ const BracketsPage = () => {
           }}
           gameName={currentGame.data[0].name}
         />
+      )}
+      {isEditModalOpen && currentGame?.data?.[0] && (
+        <EditGameModal
+          onClose={() => setIsEditModalOpen(false)}
+          game={currentGame.data[0]}
+        >
+          <div className="p-4" />
+        </EditGameModal>
       )}
     </div>
   );

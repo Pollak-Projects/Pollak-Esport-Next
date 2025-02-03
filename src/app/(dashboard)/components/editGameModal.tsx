@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { hu } from "date-fns/locale";
 import {
   Card,
@@ -23,17 +23,34 @@ import {
 } from "@/components/ui/popover";
 import { v4 as uuidv4 } from "uuid";
 
-interface AddGameModalProps {
-  children: React.ReactNode;
-  onClose: () => void;
+interface Game {
+  id: string;
+  name: string;
+  description: string;
+  playerPerTeam: number;
+  startDate: string;
+  endDate: string;
+  image: string;
 }
 
-const AddGameModal: React.FC<AddGameModalProps> = ({ children, onClose }) => {
-  const [name, setName] = useState<string>("");
-  const [playerPerTeam, setPlayerPerTeam] = useState<number>(5);
-  const [description, setDescription] = useState<string>("");
-  const [startDate, setStartDate] = useState<Date>();
-  const [endDate, setEndDate] = useState<Date>();
+interface EditGameModalProps {
+  children: React.ReactNode;
+  onClose: () => void;
+  game: Game;
+}
+
+const EditGameModal: React.FC<EditGameModalProps> = ({
+  children,
+  onClose,
+  game,
+}) => {
+  const [name, setName] = useState<string>(game.name);
+  const [playerPerTeam, setPlayerPerTeam] = useState<number>(
+    game.playerPerTeam
+  );
+  const [description, setDescription] = useState<string>(game.description);
+  const [startDate, setStartDate] = useState<Date>(new Date(game.startDate));
+  const [endDate, setEndDate] = useState<Date>(new Date(game.endDate));
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -84,20 +101,12 @@ const AddGameModal: React.FC<AddGameModalProps> = ({ children, onClose }) => {
     e.preventDefault();
 
     try {
-      if (
-        !name ||
-        !description ||
-        !playerPerTeam ||
-        !startDate ||
-        !endDate ||
-        !selectedFile
-      ) {
+      if (!name || !description || !playerPerTeam || !startDate || !endDate) {
         const missingFields = [
           !name && "név",
           !playerPerTeam && "játékosok száma",
           !startDate && "kezdési dátum",
           !endDate && "befejezési dátum",
-          !selectedFile && "kép",
         ]
           .filter(Boolean)
           .join(", ");
@@ -105,9 +114,12 @@ const AddGameModal: React.FC<AddGameModalProps> = ({ children, onClose }) => {
       }
 
       setIsSubmitting(true);
-      const imageUrl = await uploadImage(selectedFile);
+      let imageUrl = game.image;
 
-      // Összevont dátumkezelő függvény
+      if (selectedFile) {
+        imageUrl = await uploadImage(selectedFile);
+      }
+
       const formatDate = (date: Date) => {
         const newDate = new Date(date);
         newDate.setDate(newDate.getDate() + 1);
@@ -115,9 +127,9 @@ const AddGameModal: React.FC<AddGameModalProps> = ({ children, onClose }) => {
       };
 
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/game/`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/game/${game.id}`,
         {
-          method: "POST",
+          method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
@@ -133,20 +145,13 @@ const AddGameModal: React.FC<AddGameModalProps> = ({ children, onClose }) => {
       );
 
       if (!response.ok) {
-        const errorData = await response.text();
-        console.error("Game creation failed:", {
-          status: response.status,
-          statusText: response.statusText,
-          errorData,
-        });
         throw new Error(
-          `Játék létrehozása sikertelen (${response.status}): ${response.statusText}`
+          `Játék módosítása sikertelen (${response.status}): ${response.statusText}`
         );
       }
 
-      const newGame = await response.json();
-      toast.success("Játék sikeresen hozzáadva!");
-      window.location.href = `/admin/games/${newGame.data.id}`;
+      toast.success("Játék sikeresen módosítva!");
+      window.location.reload();
     } catch (error) {
       console.error("Form submission error:", error);
       if (error instanceof Error) {
@@ -166,15 +171,17 @@ const AddGameModal: React.FC<AddGameModalProps> = ({ children, onClose }) => {
       );
       return;
     }
-    setEndDate(date);
+    if (date) {
+      setEndDate(date);
+    }
   };
 
   return (
     <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 backdrop-blur-sm z-50">
       <Card className="w-[350px]">
         <CardHeader>
-          <CardTitle>Játék hozzáadása</CardTitle>
-          <CardDescription>Játékot itt tudsz hozzáadni.</CardDescription>
+          <CardTitle>Játék szerkesztése</CardTitle>
+          <CardDescription>Játék adatainak módosítása.</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit}>
@@ -234,7 +241,9 @@ const AddGameModal: React.FC<AddGameModalProps> = ({ children, onClose }) => {
                     <Calendar
                       mode="single"
                       selected={startDate}
-                      onSelect={setStartDate}
+                      onSelect={(date: Date | undefined) =>
+                        date && setStartDate(date)
+                      }
                       weekStartsOn={1}
                       locale={hu}
                     />
@@ -276,8 +285,11 @@ const AddGameModal: React.FC<AddGameModalProps> = ({ children, onClose }) => {
                   type="file"
                   accept="image/*"
                   onChange={handleImageChange}
-                  required
                 />
+                <p className="text-sm text-muted-foreground">
+                  Csak akkor tölts fel új képet, ha módosítani szeretnéd a
+                  meglévőt.
+                </p>
               </div>
             </div>
           </form>
@@ -287,7 +299,7 @@ const AddGameModal: React.FC<AddGameModalProps> = ({ children, onClose }) => {
             Mégse
           </Button>
           <Button type="submit" onClick={handleSubmit} disabled={isSubmitting}>
-            {isSubmitting ? "Feltöltés..." : "Hozzáadás"}
+            {isSubmitting ? "Mentés..." : "Módosítás"}
           </Button>
         </CardFooter>
       </Card>
@@ -296,4 +308,4 @@ const AddGameModal: React.FC<AddGameModalProps> = ({ children, onClose }) => {
   );
 };
 
-export default AddGameModal;
+export default EditGameModal;
