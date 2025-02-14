@@ -1,39 +1,25 @@
-import NextAuth, {
-  Account,
-  Profile,
-  RegisterUser,
-  Session,
-  User,
-} from "next-auth";
+import NextAuth, { Account, Profile, Session, User } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { JWT } from "next-auth/jwt";
 import logger from "@logger";
-import { jwtDecode, JwtPayload } from "jwt-decode";
-import { createKeycloakUser } from "@/lib/keycloak";
-
-interface KeycloakPayload extends JwtPayload {
-  resource_access?: {
-    frontend?: {
-      roles: string[];
-    };
-    [key: string]: any;
-  };
-  realm_access?: {
-    roles: string[];
-  };
-  email?: string;
-  name?: string;
-  given_name?: string;
-  family_name?: string;
-  picture?: string;
-  preferred_username?: string;
-}
-
-interface RegistrationCredentials {
-  user: string;
-}
 
 const log = logger("server:auth");
+
+interface AuthResponse {
+  access_token: string;
+  refresh_token: string;
+  user_id: string;
+}
+
+interface TokenPayload {
+  sub: string;
+  name: string;
+  email: string;
+  userGroup: string;
+  om: string;
+  iat: number;
+  exp: number;
+}
 
 const authOptions = {
   secret: process.env.AUTH_SECRET,
@@ -41,96 +27,39 @@ const authOptions = {
   debug: true,
   providers: [
     CredentialsProvider({
-      id: "signup",
-      name: "Signup",
-      credentials: {
-        user: { type: "text", label: "User Data" },
-      },
-      async authorize(credentials) {
-        try {
-          if (!credentials?.user) {
-            throw new Error("No user data provided");
-          }
-
-          const userData = JSON.parse(credentials.user as string);
-
-          // Create user using admin token
-          await createKeycloakUser(userData);
-
-          // Log in the new user
-          const loginRes = await fetch(process.env.AUTH_KEYCLOAK_TOKEN_URL!, {
-            method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: new URLSearchParams({
-              grant_type: "password",
-              client_id: process.env.AUTH_KEYCLOAK_ID!,
-              client_secret: process.env.AUTH_KEYCLOAK_SECRET!,
-              username: userData.username,
-              password: userData.credentials.value,
-              scope: "openid profile email",
-            }),
-          });
-
-          if (!loginRes.ok) {
-            const error = await loginRes.text();
-            throw new Error(`Login failed: ${error}`);
-          }
-
-          const tokens = await loginRes.json();
-          const payload = jwtDecode<KeycloakPayload>(tokens.access_token);
-
-          return {
-            id: payload.sub,
-            name: payload.preferred_username || userData.username,
-            email: userData.email,
-            token: tokens,
-          };
-        } catch (error) {
-          log.error("Registration error:", error);
-          throw error;
-        }
-      },
-    }),
-    CredentialsProvider({
       id: "login",
       name: "Credentials",
       credentials: {
         username: { type: "text" },
         password: { type: "password" },
       },
-      async authorize(credentials, req): Promise<User | null> {
+      async authorize(credentials): Promise<User | null> {
         log.debug("Authorizing with credentials");
         try {
-          const res = await fetch(process.env.AUTH_KEYCLOAK_TOKEN_URL!, {
+          const res = await fetch("https://auth.pollak.info/auth/login", {
             method: "POST",
             headers: {
-              "Content-Type": "application/x-www-form-urlencoded",
+              "Content-Type": "application/json",
             },
-            body: new URLSearchParams({
-              grant_type: "password",
-              client_id: process.env.AUTH_KEYCLOAK_ID!,
-              client_secret: process.env.AUTH_KEYCLOAK_SECRET!,
-              username: (credentials?.username as string) || "",
-              password: (credentials?.password as string) || "",
-              scope: "openid",
+            body: JSON.stringify({
+              username: credentials?.username,
+              password: credentials?.password,
             }),
           });
+
           log.debug(`Got response ${res.status}`);
-          const tokenOrError = await res.json();
+          const authResponse: AuthResponse = await res.json();
 
-          log.debug(JSON.stringify(tokenOrError));
-
-          if (!res.ok) throw tokenOrError;
+          if (!res.ok) throw new Error("Login failed");
 
           log.debug("Logging in with credentials");
 
-          const token = tokenOrError as JWT;
+          const token = authResponse.access_token;
 
           const newUser: User = {
-            id: token.sub,
-            email: token.email,
-            name: token.name,
-            image: token.picture,
+            id: authResponse.user_id,
+            email: "",
+            name: credentials?.username || "",
             token,
           };
 
@@ -144,111 +73,62 @@ const authOptions = {
   ],
   pages: {
     signIn: "/login",
-    newUser: "/register",
-  },
-  events: {
-    async signOut() {
-      // This is a SERIOUSLY hacky way to do this, but it works.
-      const session: Session | null = await auth();
-
-      const url = `${
-        process.env.KEYCLOAK_SESSION_END_URL
-      }?id_token_hint=${encodeURIComponent(
-        session?.token?.id_token || ""
-      )}&post_logout_redirect_uri=${encodeURIComponent(process.env.HOST_URL!)}`;
-
-      try {
-        const resp = await fetch(url, { method: "GET" });
-        log.debug("Logged out\n", resp);
-        log.debug(await resp.text());
-      } catch (error) {
-        log.error("Failed to logout:", error);
-      }
-    },
   },
   callbacks: {
-    async signIn({ user, account }: { user: User; account: Account | null }) {
-      if (!user?.token) return false;
-
-      const mutableAccount = account || ({} as any);
-      Object.assign(mutableAccount, {
-        id_token: user.token.id_token,
-        access_token: user.token.access_token,
-        refresh_token: user.token.refresh_token,
-        expires_at: user.token.expires_at,
-      });
-
-      return true;
-    },
-    async jwt({ token, account }: { token: JWT; account: Account | null }) {
-      if (account) {
+    async jwt({ token, user }: { token: JWT; user?: User }) {
+      if (user) {
         return {
           ...token,
-          id_token: account.id_token,
-          access_token: account.access_token,
-          refresh_token: account.refresh_token,
-          expires_at: account.expires_at,
+          access_token: user.token,
+          user_id: user.id,
         };
       }
 
-      if (!token.access_token || !token.refresh_token) return token;
-
-      // Token is still valid
-      if (Date.now() < (token.expires_at || 0) * 1000) {
-        return token;
-      }
-
-      // Token expired, try to refresh
       try {
-        const res = await fetch(process.env.AUTH_KEYCLOAK_TOKEN_URL!, {
-          method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: new URLSearchParams({
-            client_id: process.env.AUTH_KEYCLOAK_ID!,
-            client_secret: process.env.AUTH_KEYCLOAK_SECRET!,
-            grant_type: "refresh_token",
-            refresh_token: token.refresh_token,
-          }),
+        const verifyRes = await fetch("https://auth.pollak.info/auth/verify", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token.access_token}`,
+          },
         });
 
-        const newToken = await res.json();
+        log.debug(`Token verification response: ${verifyRes.status}`);
 
-        if (!res.ok) throw newToken;
+        if (!verifyRes.ok) {
+          throw new Error(
+            `Token verification failed: ${await verifyRes.text()}`
+          );
+        }
 
-        return {
-          ...token,
-          access_token: newToken.access_token,
-          refresh_token: newToken.refresh_token ?? token.refresh_token,
-          expires_at: Math.floor(Date.now() / 1000 + newToken.expires_in),
-        };
+        return token;
       } catch (error) {
-        console.error("Error refreshing token:", error);
-        return { ...token, error: "RefreshTokenError" };
+        console.error("Error verifying token:", error);
+        return { ...token, error: "TokenVerificationError" };
       }
     },
     async session({ session, token }: { session: Session; token: JWT }) {
       if (!token.access_token) return session;
 
       try {
-        const payload = jwtDecode<KeycloakPayload>(token.access_token);
+        const payload: TokenPayload = JSON.parse(
+          Buffer.from(token.access_token.split(".")[1], "base64").toString()
+        );
 
         return {
           ...session,
           user: {
-            id: payload.sub,
+            id: token.user_id,
             email: payload.email,
-            name: payload.preferred_username || payload.name,
-            firstName: payload.given_name,
-            lastName: payload.family_name,
-            image: payload.picture,
-            roles: payload.resource_access?.frontend?.roles || [],
+            name: payload.name,
+            userGroup: payload.userGroup,
+            om: payload.om,
           },
           token,
           error: undefined,
         };
       } catch (error) {
         console.error("Error decoding token:", error);
-        return { ...session, error: "RefreshAccessTokenError" };
+        return { ...session, error: "TokenDecodeError" };
       }
     },
   },
