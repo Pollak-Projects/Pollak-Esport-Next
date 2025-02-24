@@ -28,10 +28,12 @@ import {
 } from "@/components/ui/input-otp";
 
 interface User {
-  id: string;
+  id: number;
   username: string;
-  Name: string;
+  name: string;
   email: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 const MyTeam = () => {
@@ -64,9 +66,13 @@ const MyTeam = () => {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/${userId}`
       );
-      const userData = await response.json();
-      console.log("User details response:", userData);
-      return userData;
+      const result = await response.json();
+      console.log("User details response:", result);
+
+      if (result.data && result.data.length > 0) {
+        return result.data[0];
+      }
+      return null;
     } catch (error) {
       console.error("Error fetching user details:", error);
       return null;
@@ -169,7 +175,7 @@ const MyTeam = () => {
                           <TableCell className="font-medium">
                             {member.username}
                           </TableCell>
-                          <TableCell>{member.Name}</TableCell>
+                          <TableCell>{member.name}</TableCell>
                           <TableCell>{member.email}</TableCell>
                           <TableCell className="text-right">
                             <Button variant="ghost">
