@@ -18,6 +18,7 @@ import { User } from "next-auth";
 
 interface ExtendedUser extends User {
   firstName?: string;
+  om?: string;
   lastName?: string;
 }
 
@@ -29,7 +30,7 @@ interface FormData {
 }
 
 const Settings = () => {
-  const { user, isLoading } = useAuth() as { user: ExtendedUser | null, isLoading: boolean };
+  const { user } = useAuth() as { user: ExtendedUser | null };
   const [formData, setFormData] = useState<FormData>({
     firstName: "",
     lastName: "",
@@ -39,10 +40,20 @@ const Settings = () => {
 
   useEffect(() => {
     if (user) {
+      let firstName = user.firstName;
+      let lastName = user.lastName;
+
+      // If firstName and lastName are not set, set them from the name
+      if (!firstName && !lastName && user.name) {
+        const nameParts = user.name.split(" ");
+        lastName = nameParts[0] || "";
+        firstName = nameParts.slice(1).join(" ") || "";
+      }
+
       setFormData({
-        firstName: user.firstName || "",
-        lastName: user.lastName || "",
-        username: user.name || "",
+        firstName: firstName || "",
+        lastName: lastName || "",
+        username: user.om || "",
         email: user.email || "",
       });
     }
