@@ -13,6 +13,7 @@ interface AuthResponse {
 
 interface TokenPayload {
   sub: string;
+  username: string;
   name: string;
   email: string;
   userGroup: string;
@@ -122,6 +123,7 @@ const authOptions = {
           user: {
             id: token.user_id as string,
             email: payload.email,
+            username: payload.username,
             name: payload.name,
             userGroup: payload.userGroup,
             om: payload.om,

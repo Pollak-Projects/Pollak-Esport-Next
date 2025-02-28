@@ -18,7 +18,7 @@ import { User } from "next-auth";
 
 interface ExtendedUser extends User {
   firstName?: string;
-  om?: string;
+  username?: string;
   lastName?: string;
 }
 
@@ -53,7 +53,7 @@ const Settings = () => {
       setFormData({
         firstName: firstName || "",
         lastName: lastName || "",
-        username: user.om || "",
+        username: user.username || "",
         email: user.email || "",
       });
     }
