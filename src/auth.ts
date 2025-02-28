@@ -59,7 +59,10 @@ const authOptions = {
           const newUser: User = {
             id: authResponse.user_id,
             email: "",
-            name: credentials?.username || "",
+            name:
+              typeof credentials?.username === "string"
+                ? credentials.username
+                : null,
             token,
           };
 
@@ -117,18 +120,22 @@ const authOptions = {
         return {
           ...session,
           user: {
-            id: token.user_id,
+            id: token.user_id as string,
             email: payload.email,
             name: payload.name,
             userGroup: payload.userGroup,
             om: payload.om,
           },
+          expires: session.expires,
           token,
           error: undefined,
-        };
+        } as Session;
       } catch (error) {
         console.error("Error decoding token:", error);
-        return { ...session, error: "TokenDecodeError" };
+        return {
+          ...session,
+          error: "TokenDecodeError",
+        } as unknown as Session;
       }
     },
   },
