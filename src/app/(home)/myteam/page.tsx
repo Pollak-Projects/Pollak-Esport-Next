@@ -30,7 +30,7 @@ import {
 interface User {
   id: number;
   username: string;
-  name: string;
+  nev: string;
   email: string;
   createdAt: string;
   updatedAt: string;
@@ -46,13 +46,10 @@ const MyTeam = () => {
 
   const fetchTeamMembers = async (teamId: string) => {
     try {
-      console.log("Fetching team members for ID:", teamId);
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/usersonteam/${teamId}`
       );
       const result = await response.json();
-      console.log("Team members raw response:", result);
-      // Ellenőrizzük, hogy a data tömb létezik-e
       return result.data || [];
     } catch (error) {
       console.error("Error fetching team members:", error);
@@ -60,72 +57,25 @@ const MyTeam = () => {
     }
   };
 
-  const fetchUserDetails = async (userId: string): Promise<User | null> => {
-    try {
-      console.log("Fetching user details for ID:", userId);
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/${userId}`
-      );
-      const result = await response.json();
-      console.log("User details response:", result);
-
-      if (result.data && result.data.length > 0) {
-        return result.data[0];
-      }
-      return null;
-    } catch (error) {
-      console.error("Error fetching user details:", error);
-      return null;
-    }
-  };
-
   useEffect(() => {
     const fetchAllData = async () => {
       try {
         setIsLoading(true);
-        console.log("Fetching team data...");
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_BACKEND_URL}/team/Kiralyok1`
         );
         const result = await response.json();
-        console.log("Team data response:", result);
-
         const data = result.data[0];
-        console.log("Processed team data:", data);
-
         const teamMembers = await fetchTeamMembers(data.id);
-        console.log("All team members:", teamMembers);
-
-        // Ellenőrizzük, hogy a teamMembers tömb-e
-        if (!Array.isArray(teamMembers)) {
-          console.error("Team members is not an array:", teamMembers);
-          return;
-        }
-
-        const memberDetails = await Promise.all(
-          teamMembers.map(async (member) => {
-            console.log("Processing member:", member);
-            // Ellenőrizzük, hogy a userId létezik-e
-            if (!member.userId) {
-              console.error("Member has no userId:", member);
-              return null;
-            }
-            return await fetchUserDetails(member.userId);
-          })
-        );
-        console.log("All member details:", memberDetails);
-
-        const validMembers = memberDetails.filter((member) => member !== null);
-        console.log("Valid members:", validMembers);
 
         setTeamData({
-          name: data?.name || "",
-          members: validMembers,
+          name: data?.nev || "",
+          members: teamMembers,
           joinCode: data?.inviteCode || "000000",
         });
         console.log("Final team data state:", {
-          name: data?.name || "",
-          members: validMembers,
+          name: data?.nev || "",
+          members: teamMembers,
           joinCode: data?.inviteCode || "000000",
         });
       } catch (error) {
@@ -140,7 +90,7 @@ const MyTeam = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen">
-      <Card className="max-w-[600px]">
+      <Card className="max-w-[800px]">
         <CardHeader>
           <CardTitle>Csapatom</CardTitle>
           <CardDescription>A csapatod itt tudod szerkeszteni.</CardDescription>
@@ -175,7 +125,7 @@ const MyTeam = () => {
                           <TableCell className="font-medium">
                             {member.username}
                           </TableCell>
-                          <TableCell>{member.name}</TableCell>
+                          <TableCell>{member.nev}</TableCell>
                           <TableCell>{member.email}</TableCell>
                           <TableCell className="text-right">
                             <Button variant="ghost">
